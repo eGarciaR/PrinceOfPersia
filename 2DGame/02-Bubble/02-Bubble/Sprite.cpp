@@ -32,6 +32,8 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	shaderProgram = program;
 	currentAnimation = -1;
 	position = glm::vec2(0.f);
+	startTime = 0;
+	timePassed = 0;
 }
 
 void Sprite::update(int deltaTime)
@@ -104,6 +106,31 @@ int Sprite::animation() const
 void Sprite::setPosition(const glm::vec2 &pos)
 {
 	position = pos;
+}
+
+bool Sprite::canRun() {
+	if (startTime >= 20) return true;
+	else return false;
+}
+
+void Sprite::started() {
+	++startTime;
+}
+
+int Sprite::getTimePassed() {
+	return timePassed;
+}
+
+void Sprite::addTime() {
+	++timePassed;
+}
+
+void Sprite::resetTimePassed() {
+	timePassed = 0;
+}
+
+void Sprite::resetTimeStarted() {
+	startTime = 0;
 }
 
 

@@ -31,6 +31,12 @@ public:
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
 	int animation() const;
+	bool canRun(); // Indica si ya puede empezar a correr
+	void started(); // Indica que ya ha empezado a correr
+	int getTimePassed();
+	void addTime();
+	void resetTimePassed();
+	void resetTimeStarted();
 	
 	void setPosition(const glm::vec2 &pos);
 
@@ -42,6 +48,8 @@ private:
 	GLint posLocation, texCoordLocation;
 	glm::vec2 position;
 	int currentAnimation, currentKeyframe;
+	int startTime;
+	int timePassed;
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
