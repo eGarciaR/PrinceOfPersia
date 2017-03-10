@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 96*2
+#define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
 
