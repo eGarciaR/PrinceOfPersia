@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT
+	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT
 };
 
 
@@ -22,7 +22,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.1), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(6);
+	sprite->setNumberAnimations(8);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.2f));
@@ -31,12 +31,18 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
 		
 	sprite->setAnimationSpeed(MOVE_LEFT, 8);
-	for (float i = 7; i >= 5; --i) {
+	for (float i = 6; i > 3; --i) {
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f + (i / 10.0f),0.3f ));
+	}
+	for (float i = 4; i <= 6; ++i) {
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f + (i / 10.0f), 0.3f));
 	}
 		
 	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
 	for (float i = 3; i < 6; ++i) {
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.1f));
+	}
+	for (float i = 5; i >= 3; --i) {
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.1f));
 	}
 
@@ -56,7 +62,6 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.9f, 0.1f));
 	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.f, 0.f));
 
-
 	sprite->setAnimationSpeed(STOP_LEFT, 8);
 	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.2f, 0.3f));
 	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.1f, 0.3f));
@@ -74,10 +79,28 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if(sprite->animation() != MOVE_LEFT)
+		/*if(sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
 		posPlayer.x -= 2;
 		if(map->collisionMoveLeft(posPlayer, glm::ivec2(16, 32)))
+		{
+			posPlayer.x += 2;
+			sprite->changeAnimation(STAND_LEFT);
+		}*/
+		if (sprite->animation() != START_LEFT) {
+			if (sprite->animation() != MOVE_LEFT) {
+				sprite->changeAnimation(START_LEFT);
+				sprite->resetTimeStarted();
+			}
+			sprite->started(); // Indicamos que ya ha empezado a correr
+		}
+		if (sprite->animation() == START_LEFT) {
+			if (sprite->canRun())
+				sprite->changeAnimation(MOVE_LEFT);
+			else sprite->started();
+		}
+		posPlayer.x -= 2;
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(16, 32)))
 		{
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
@@ -111,8 +134,10 @@ void Player::update(int deltaTime)
 	}
 	else
 	{
-		if(sprite->animation() == MOVE_LEFT)
-			sprite->changeAnimation(STAND_LEFT);
+		if (sprite->animation() == MOVE_LEFT) {
+			sprite->changeAnimation(STOP_LEFT);
+			sprite->resetTimePassed();
+		}
 		else if (sprite->animation() == MOVE_RIGHT) {
 			sprite->changeAnimation(STOP_RIGHT);
 			sprite->resetTimePassed();
@@ -120,10 +145,19 @@ void Player::update(int deltaTime)
 		else if (sprite->animation() == START_RIGHT) {
 			sprite->changeAnimation(STAND_RIGHT);
 		}
+		else if (sprite->animation() == START_LEFT) {
+			sprite->changeAnimation(STAND_LEFT);
+		}
 		else if (sprite->animation() == STOP_RIGHT) {
 			posPlayer.x += 1;
 			if (sprite->getTimePassed() > 25)
 				sprite->changeAnimation(STAND_RIGHT);
+			else sprite->addTime();
+		}
+		else if (sprite->animation() == STOP_LEFT) {
+			posPlayer.x -= 1;
+			if (sprite->getTimePassed() > 25)
+				sprite->changeAnimation(STAND_LEFT);
 			else sprite->addTime();
 		}
 	}
