@@ -79,25 +79,15 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		/*if(sprite->animation() != MOVE_LEFT)
-			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 2;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(16, 32)))
-		{
-			posPlayer.x += 2;
-			sprite->changeAnimation(STAND_LEFT);
-		}*/
-		if (sprite->animation() != START_LEFT) {
-			if (sprite->animation() != MOVE_LEFT) {
-				sprite->changeAnimation(START_LEFT);
-				sprite->resetTimeStarted();
-			}
-			sprite->started(); // Indicamos que ya ha empezado a correr
+		if (sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
+			sprite->changeAnimation(START_LEFT);	// Cambiamos animación a empezar a correr
+			sprite->resetTimeStarted();		// Reseteamos el tiempo de empezar a correr
+			sprite->started();		// Empezamos a incrementar el tiempo de empezar a correr
 		}
-		if (sprite->animation() == START_LEFT) {
-			if (sprite->canRun())
-				sprite->changeAnimation(MOVE_LEFT);
-			else sprite->started();
+		if (sprite->animation() == START_LEFT) {	
+			if (sprite->canRun())	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
+				sprite->changeAnimation(MOVE_LEFT);		// Cambiamos animación al ciclo de correr
+			else sprite->started();		// Si aún no ha pasado el tiempo necesario de empezar a correr, incrementamos el tiempo
 		}
 		posPlayer.x -= 2;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(16, 32)))
@@ -108,16 +98,11 @@ void Player::update(int deltaTime)
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (sprite->animation() != START_RIGHT) {
-			if (sprite->animation() != MOVE_RIGHT) {
-				sprite->changeAnimation(START_RIGHT);
-				sprite->resetTimeStarted();
-			}
-			sprite->started(); // Indicamos que ya ha empezado a correr
+		if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT) {
+			sprite->changeAnimation(START_RIGHT);
+			sprite->resetTimeStarted();
+			sprite->started();
 		}
-		/*if (sprite->animation() != MOVE_RIGHT) {
-			sprite->changeAnimation(MOVE_RIGHT);
-		}*/
 		if (sprite->animation() == START_RIGHT) {
 			if (sprite->canRun())
 				sprite->changeAnimation(MOVE_RIGHT);
