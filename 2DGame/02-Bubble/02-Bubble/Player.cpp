@@ -90,7 +90,7 @@ void Player::update(int deltaTime)
 			else sprite->started();		// Si aún no ha pasado el tiempo necesario de empezar a correr, incrementamos el tiempo
 		}
 		posPlayer.x -= 2;
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(16, 32)))
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(40, 32)))
 		{
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
@@ -111,7 +111,7 @@ void Player::update(int deltaTime)
 
 		posPlayer.x += 2;
 		
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+		if(map->collisionMoveRight(posPlayer, glm::ivec2(40, 32)))
 		{
 			posPlayer.x -= 2;
 			sprite->changeAnimation(STAND_RIGHT);
@@ -159,13 +159,13 @@ void Player::update(int deltaTime)
 		{
 			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
 			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(16, 64), &posPlayer.y);
+				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
 		}
 	}
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(16, 64), &posPlayer.y))
+		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
