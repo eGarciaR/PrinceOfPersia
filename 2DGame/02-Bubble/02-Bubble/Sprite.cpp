@@ -32,8 +32,7 @@ Sprite::Sprite(const glm::vec2 &quadSize, const glm::vec2 &sizeInSpritesheet, Te
 	shaderProgram = program;
 	currentAnimation = -1;
 	position = glm::vec2(0.f);
-	startTime = 0;
-	timePassed = 0;
+	isSpriteFalling = true;
 }
 
 void Sprite::update(int deltaTime)
@@ -113,6 +112,14 @@ bool Sprite::checkChangeAnimation(int pos) {
 	if (texCoordDispl == animations[pos].keyframeDispl[size - 1])
 		return true;
 	return false;
+}
+
+bool Sprite::isFalling() {
+	return isSpriteFalling;
+}
+
+void Sprite::falling(bool fall) {
+	isSpriteFalling = fall;
 }
 
 

@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT
+	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT
 };
 
 
@@ -21,52 +21,57 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.1), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(8);
+	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.05), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(9);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
-	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.2f));
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
 		
 	sprite->setAnimationSpeed(STAND_RIGHT, 8);
 	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
 		
 	sprite->setAnimationSpeed(MOVE_LEFT, 8);
 	for (float i = 6; i > 3; --i) {
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f + (i / 10.0f),0.3f ));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f + (i / 10.0f),0.15f ));
 	}
 	for (float i = 4; i <= 6; ++i) {
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f + (i / 10.0f), 0.3f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.0f + (i / 10.0f), 0.15f));
 	}
 		
 	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
 	for (float i = 3; i < 6; ++i) {
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.1f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.05f));
 	}
 	for (float i = 5; i >= 3; --i) {
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.1f));
+		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.05f));
 	}
 
 	sprite->setAnimationSpeed(START_RIGHT, 8);
-	sprite->addKeyframe(START_RIGHT, glm::vec2(0.0f, 0.1f));
-	sprite->addKeyframe(START_RIGHT, glm::vec2(0.1f, 0.1f));
-	sprite->addKeyframe(START_RIGHT, glm::vec2(0.2f, 0.1f));
+	sprite->addKeyframe(START_RIGHT, glm::vec2(0.0f, 0.05f));
+	sprite->addKeyframe(START_RIGHT, glm::vec2(0.1f, 0.05f));
+	sprite->addKeyframe(START_RIGHT, glm::vec2(0.2f, 0.05f));
 
 	sprite->setAnimationSpeed(START_LEFT, 8);
-	sprite->addKeyframe(START_LEFT, glm::vec2(0.9f, 0.3f));
-	sprite->addKeyframe(START_LEFT, glm::vec2(0.8f, 0.3f));
-	sprite->addKeyframe(START_LEFT, glm::vec2(0.7f, 0.3f));
+	sprite->addKeyframe(START_LEFT, glm::vec2(0.9f, 0.15f));
+	sprite->addKeyframe(START_LEFT, glm::vec2(0.8f, 0.15f));
+	sprite->addKeyframe(START_LEFT, glm::vec2(0.7f, 0.15f));
 
 	sprite->setAnimationSpeed(STOP_RIGHT, 8);
-	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.7f, 0.1f));
-	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.8f, 0.1f));
-	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.9f, 0.1f));
+	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.7f, 0.05f));
+	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.8f, 0.05f));
+	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.9f, 0.05f));
 	sprite->addKeyframe(STOP_RIGHT, glm::vec2(0.f, 0.f));
 
 	sprite->setAnimationSpeed(STOP_LEFT, 8);
-	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.2f, 0.3f));
-	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.1f, 0.3f));
-	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.0f, 0.3f));
-	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.f, 0.2f));
+	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.2f, 0.15f));
+	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.1f, 0.15f));
+	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.0f, 0.15f));
+	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.f, 0.1f));
+
+	sprite->setAnimationSpeed(FALL_RIGHT, 8);
+	for (float i = 1; i < 10; ++i) {
+		sprite->addKeyframe(FALL_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.25f));
+	}
 		
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -136,6 +141,10 @@ void Player::update(int deltaTime)
 			if (sprite->checkChangeAnimation(STOP_LEFT))
 				sprite->changeAnimation(STAND_LEFT);
 		}
+		else if (sprite->animation() == FALL_RIGHT) {
+			if (sprite->checkChangeAnimation(FALL_RIGHT))
+				sprite->changeAnimation(STAND_RIGHT);
+		}
 	}
 	
 	if(bJumping)
@@ -166,9 +175,11 @@ void Player::update(int deltaTime)
 			}
 			else if (sprite->isFalling()) {
 				//TODO: Amortiguar
+				sprite->changeAnimation(FALL_RIGHT);
 			}
+			sprite->falling(false);
 		}
-		else sprite->falling();
+		else sprite->falling(true);
 	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));

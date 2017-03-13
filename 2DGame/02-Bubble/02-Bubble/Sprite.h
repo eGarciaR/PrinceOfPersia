@@ -33,6 +33,8 @@ public:
 	int animation() const;
 
 	bool checkChangeAnimation(int pos);
+	bool isFalling();
+	void falling(bool fall);
 	
 	void setPosition(const glm::vec2 &pos);
 
@@ -44,11 +46,11 @@ private:
 	GLint posLocation, texCoordLocation;
 	glm::vec2 position;
 	int currentAnimation, currentKeyframe;
-	int startTime;
-	int timePassed;
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
+
+	bool isSpriteFalling;
 
 };
 
