@@ -108,29 +108,11 @@ void Sprite::setPosition(const glm::vec2 &pos)
 	position = pos;
 }
 
-bool Sprite::canRun() {
-	if (startTime >= 20) return true;
-	else return false;
-}
-
-void Sprite::started() {
-	++startTime;
-}
-
-int Sprite::getTimePassed() {
-	return timePassed;
-}
-
-void Sprite::addTime() {
-	++timePassed;
-}
-
-void Sprite::resetTimePassed() {
-	timePassed = 0;
-}
-
-void Sprite::resetTimeStarted() {
-	startTime = 0;
+bool Sprite::checkChangeAnimation(int pos) {
+	int size = animations[pos].keyframeDispl.size();
+	if (texCoordDispl == animations[pos].keyframeDispl[size - 1])
+		return true;
+	return false;
 }
 
 

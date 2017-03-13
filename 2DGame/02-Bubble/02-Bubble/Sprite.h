@@ -31,12 +31,8 @@ public:
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
 	int animation() const;
-	bool canRun(); // Indica si ya puede empezar a correr
-	void started(); // Indica que ya ha empezado a correr
-	int getTimePassed();
-	void addTime();
-	void resetTimePassed();
-	void resetTimeStarted();
+
+	bool checkChangeAnimation(int pos);
 	
 	void setPosition(const glm::vec2 &pos);
 

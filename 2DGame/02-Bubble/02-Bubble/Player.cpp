@@ -81,13 +81,11 @@ void Player::update(int deltaTime)
 	{
 		if (sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
 			sprite->changeAnimation(START_LEFT);	// Cambiamos animación a empezar a correr
-			sprite->resetTimeStarted();		// Reseteamos el tiempo de empezar a correr
-			sprite->started();		// Empezamos a incrementar el tiempo de empezar a correr
 		}
 		if (sprite->animation() == START_LEFT) {	
-			if (sprite->canRun())	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
-				sprite->changeAnimation(MOVE_LEFT);		// Cambiamos animación al ciclo de correr
-			else sprite->started();		// Si aún no ha pasado el tiempo necesario de empezar a correr, incrementamos el tiempo
+			if (sprite->checkChangeAnimation(START_LEFT))	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
+				sprite->changeAnimation(MOVE_LEFT);
+			
 		}
 		posPlayer.x -= 2;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(40, 32)))
@@ -100,13 +98,10 @@ void Player::update(int deltaTime)
 	{
 		if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT) {
 			sprite->changeAnimation(START_RIGHT);
-			sprite->resetTimeStarted();
-			sprite->started();
 		}
 		if (sprite->animation() == START_RIGHT) {
-			if (sprite->canRun())
+			if (sprite->checkChangeAnimation(START_RIGHT))
 				sprite->changeAnimation(MOVE_RIGHT);
-			else sprite->started();
 		}
 
 		posPlayer.x += 2;
@@ -121,11 +116,9 @@ void Player::update(int deltaTime)
 	{
 		if (sprite->animation() == MOVE_LEFT) {
 			sprite->changeAnimation(STOP_LEFT);
-			sprite->resetTimePassed();
 		}
 		else if (sprite->animation() == MOVE_RIGHT) {
 			sprite->changeAnimation(STOP_RIGHT);
-			sprite->resetTimePassed();
 		}
 		else if (sprite->animation() == START_RIGHT) {
 			sprite->changeAnimation(STAND_RIGHT);
@@ -135,15 +128,13 @@ void Player::update(int deltaTime)
 		}
 		else if (sprite->animation() == STOP_RIGHT) {
 			posPlayer.x += 1;
-			if (sprite->getTimePassed() > 25)
+			if (sprite->checkChangeAnimation(STOP_RIGHT))
 				sprite->changeAnimation(STAND_RIGHT);
-			else sprite->addTime();
 		}
 		else if (sprite->animation() == STOP_LEFT) {
 			posPlayer.x -= 1;
-			if (sprite->getTimePassed() > 25)
+			if (sprite->checkChangeAnimation(STOP_LEFT))
 				sprite->changeAnimation(STAND_LEFT);
-			else sprite->addTime();
 		}
 	}
 	
@@ -173,7 +164,11 @@ void Player::update(int deltaTime)
 				jumpAngle = 0;
 				startY = posPlayer.y;
 			}
+			else if (sprite->isFalling()) {
+				//TODO: Amortiguar
+			}
 		}
+		else sprite->falling();
 	}
 	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
