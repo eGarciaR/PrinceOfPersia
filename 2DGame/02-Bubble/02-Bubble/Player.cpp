@@ -13,7 +13,7 @@
 
 enum PlayerAnims
 {
-	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT
+	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT, FALL_LEFT, START_FALL_RIGHT, MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING
 };
 
 
@@ -22,7 +22,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(9);
+	sprite->setNumberAnimations(15);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -72,6 +72,22 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	for (float i = 1; i < 10; ++i) {
 		sprite->addKeyframe(FALL_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.25f));
 	}
+
+	sprite->setAnimationSpeed(START_FALL_RIGHT, 8);
+	for (float i = 0; i < 4; ++i) {
+		sprite->addKeyframe(START_FALL_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.2f));
+	}
+
+	sprite->setAnimationSpeed(MOVE_TO_LEFT, 8);
+	for (float i = 4; i > 0; --i) {
+		sprite->addKeyframe(MOVE_TO_LEFT, glm::vec2(0.0f + (i / 10.0f), 0.5f));
+	}
+
+	sprite->setAnimationSpeed(MOVE_TO_LEFT_RUNNING, 8);
+	for (float i = 0; i < 10; ++i) {
+		sprite->addKeyframe(MOVE_TO_LEFT_RUNNING, glm::vec2(0.0f + (i / 10.0f), 0.55f));
+	}
+	sprite->addKeyframe(MOVE_TO_LEFT_RUNNING, glm::vec2(0.9f, 0.55f));
 		
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -84,13 +100,17 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if (sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
-			sprite->changeAnimation(START_LEFT);	// Cambiamos animación a empezar a correr
+		if (sprite->animation() == STAND_RIGHT) {
+			sprite->changeAnimation(MOVE_TO_LEFT);
+			posPlayer.x += 2;
+		}
+		if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
+			//sprite->changeAnimation(START_LEFT);	// Cambiamos animación a empezar a correr
+			sprite->changeAnimation(START_LEFT);
 		}
 		if (sprite->animation() == START_LEFT) {	
 			if (sprite->checkChangeAnimation(START_LEFT))	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
 				sprite->changeAnimation(MOVE_LEFT);
-			
 		}
 		posPlayer.x -= 2;
 		if (map->collisionMoveLeft(posPlayer, glm::ivec2(40, 32)))
@@ -126,10 +146,10 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STOP_RIGHT);
 		}
 		else if (sprite->animation() == START_RIGHT) {
-			sprite->changeAnimation(STAND_RIGHT);
+			sprite->changeAnimation(STOP_RIGHT);
 		}
 		else if (sprite->animation() == START_LEFT) {
-			sprite->changeAnimation(STAND_LEFT);
+			sprite->changeAnimation(STOP_LEFT);
 		}
 		else if (sprite->animation() == STOP_RIGHT) {
 			posPlayer.x += 1;
@@ -144,6 +164,18 @@ void Player::update(int deltaTime)
 		else if (sprite->animation() == FALL_RIGHT) {
 			if (sprite->checkChangeAnimation(FALL_RIGHT))
 				sprite->changeAnimation(STAND_RIGHT);
+		}
+		else if (sprite->animation() == MOVE_TO_LEFT) {
+			if (sprite->checkChangeAnimation(MOVE_TO_LEFT))
+				sprite->changeAnimation(STAND_LEFT);
+		}
+		else if (sprite->animation() == START_FALL_RIGHT) {
+			if (sprite->checkChangeAnimation(START_FALL_RIGHT))
+				sprite->changeAnimation(FALL_RIGHT);
+		}
+		else if (sprite->animation() == MOVE_TO_LEFT_RUNNING) {
+			if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING))
+				sprite->changeAnimation(MOVE_LEFT);
 		}
 	}
 	
@@ -163,7 +195,7 @@ void Player::update(int deltaTime)
 		}
 	}
 	else
-	{
+	{	// Empieza a caer
 		posPlayer.y += FALL_STEP;
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y))
 		{
@@ -174,7 +206,7 @@ void Player::update(int deltaTime)
 				startY = posPlayer.y;
 			}
 			else if (sprite->isFalling()) {
-				//TODO: Amortiguar
+				// Amortiguar caída
 				sprite->changeAnimation(FALL_RIGHT);
 			}
 			sprite->falling(false);
