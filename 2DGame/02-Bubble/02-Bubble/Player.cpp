@@ -6,14 +6,15 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 4
+#define JUMP_ANGLE_STEP 3
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
 
 enum PlayerAnims
 {
-	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT, FALL_LEFT, START_FALL_RIGHT, MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING
+	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT, FALL_LEFT, START_FALL_RIGHT, 
+	MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING, START_JUMP_RIGHT, JUMP_RIGHT, JUMP_FALL_RIGHT
 };
 
 
@@ -22,7 +23,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(15);
+	sprite->setNumberAnimations(18);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -88,6 +89,19 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(MOVE_TO_LEFT_RUNNING, glm::vec2(0.0f + (i / 10.0f), 0.55f));
 	}
 	sprite->addKeyframe(MOVE_TO_LEFT_RUNNING, glm::vec2(0.9f, 0.55f));
+
+	sprite->setAnimationSpeed(START_JUMP_RIGHT, 8);
+	for (float i = 0; i < 8; ++i) {
+		sprite->addKeyframe(START_JUMP_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.6f));
+	}
+
+	sprite->setAnimationSpeed(JUMP_RIGHT, 8);
+	for (float i = 8; i < 10; ++i) {
+		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.6f));
+	}
+	sprite->setAnimationSpeed(JUMP_FALL_RIGHT, 8);
+	sprite->addKeyframe(JUMP_FALL_RIGHT, glm::vec2(0.8f, 0.75f));
+	sprite->addKeyframe(JUMP_FALL_RIGHT, glm::vec2(0.9f, 0.75f));
 		
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -177,25 +191,39 @@ void Player::update(int deltaTime)
 			if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING))
 				sprite->changeAnimation(MOVE_LEFT);
 		}
+		else if (sprite->animation() == START_JUMP_RIGHT) {
+			if (sprite->checkChangeAnimation(START_JUMP_RIGHT))
+				sprite->changeAnimation(JUMP_RIGHT);
+		}
+		else if (sprite->animation() == JUMP_RIGHT) {
+			if (sprite->checkChangeAnimation(JUMP_RIGHT))
+				sprite->changeAnimation(JUMP_FALL_RIGHT);
+		}
+		else if (sprite->animation() == JUMP_FALL_RIGHT) {
+			if (sprite->checkChangeAnimation(JUMP_FALL_RIGHT))
+				sprite->changeAnimation(STAND_RIGHT);
+		}
 	}
 	
-	if(bJumping)
+	if(bJumping) 
 	{
 		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
+		if(jumpAngle == 180) //FIN DEL SALTO
 		{
 			bJumping = false;
 			posPlayer.y = startY;
 		}
-		else
+		else //SIGUE SALTANDO
 		{
-			posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+			if (sprite->animation() == START_JUMP_RIGHT && sprite->checkChangeAnimation(START_JUMP_RIGHT)) {
+				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+				if (jumpAngle > 90)
+					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+			}
 		}
 	}
 	else
-	{	// Empieza a caer
+	{	
 		posPlayer.y += FALL_STEP;
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y))
 		{
@@ -204,6 +232,7 @@ void Player::update(int deltaTime)
 				bJumping = true;
 				jumpAngle = 0;
 				startY = posPlayer.y;
+				sprite->changeAnimation(START_JUMP_RIGHT);
 			}
 			else if (sprite->isFalling()) {
 				// Amortiguar caída
