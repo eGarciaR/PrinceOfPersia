@@ -1,4 +1,4 @@
-﻿Build started 15/03/2017 9:58:29.
+﻿Build started 16/03/2017 12:15:14.
      1>Project "F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Archivos de programa\Microsoft Visual Studio 2013 Professional\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
@@ -22,4 +22,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.93
+Time Elapsed 00:00:02.68

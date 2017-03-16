@@ -6,7 +6,7 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 3
+#define JUMP_ANGLE_STEP 2
 #define JUMP_HEIGHT 96
 #define FALL_STEP 4
 
@@ -80,8 +80,13 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	}
 
 	sprite->setAnimationSpeed(MOVE_TO_LEFT, 8);
-	for (float i = 4; i > 0; --i) {
+	for (float i = 4; i >= 0; --i) {
 		sprite->addKeyframe(MOVE_TO_LEFT, glm::vec2(0.0f + (i / 10.0f), 0.5f));
+	}
+
+	sprite->setAnimationSpeed(MOVE_TO_RIGHT, 8);
+	for (float i = 0; i < 6; ++i) {
+		sprite->addKeyframe(MOVE_TO_RIGHT, glm::vec2(0.0f + (i / 10.0f), 0.5f));
 	}
 
 	sprite->setAnimationSpeed(MOVE_TO_LEFT_RUNNING, 8);
@@ -135,7 +140,11 @@ void Player::update(int deltaTime)
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT) {
+		if (sprite->animation() == STAND_LEFT) {
+			sprite->changeAnimation(MOVE_TO_RIGHT);
+			posPlayer.x -= 2;
+		}
+		if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT && sprite->animation() != MOVE_TO_RIGHT) {
 			sprite->changeAnimation(START_RIGHT);
 		}
 		if (sprite->animation() == START_RIGHT) {
@@ -183,6 +192,10 @@ void Player::update(int deltaTime)
 			if (sprite->checkChangeAnimation(MOVE_TO_LEFT))
 				sprite->changeAnimation(STAND_LEFT);
 		}
+		else if (sprite->animation() == MOVE_TO_RIGHT) {
+			if (sprite->checkChangeAnimation(MOVE_TO_RIGHT))
+				sprite->changeAnimation(STAND_RIGHT);
+		}
 		else if (sprite->animation() == START_FALL_RIGHT) {
 			if (sprite->checkChangeAnimation(START_FALL_RIGHT))
 				sprite->changeAnimation(FALL_RIGHT);
@@ -190,10 +203,6 @@ void Player::update(int deltaTime)
 		else if (sprite->animation() == MOVE_TO_LEFT_RUNNING) {
 			if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING))
 				sprite->changeAnimation(MOVE_LEFT);
-		}
-		else if (sprite->animation() == START_JUMP_RIGHT) {
-			if (sprite->checkChangeAnimation(START_JUMP_RIGHT))
-				sprite->changeAnimation(JUMP_RIGHT);
 		}
 		else if (sprite->animation() == JUMP_RIGHT) {
 			if (sprite->checkChangeAnimation(JUMP_RIGHT))
@@ -207,20 +216,23 @@ void Player::update(int deltaTime)
 	
 	if(bJumping) 
 	{
-		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180) //FIN DEL SALTO
-		{
-			bJumping = false;
-			posPlayer.y = startY;
+		if (sprite->checkChangeAnimation(START_JUMP_RIGHT) || sprite->animation() == JUMP_RIGHT){
+			jumpAngle += JUMP_ANGLE_STEP;
+			sprite->changeAnimation(JUMP_RIGHT);
 		}
-		else //SIGUE SALTANDO
-		{
-			if (sprite->animation() == START_JUMP_RIGHT && sprite->checkChangeAnimation(START_JUMP_RIGHT)) {
-				posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
-				if (jumpAngle > 90)
-					bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+			if (jumpAngle == 180) //FIN DEL SALTO
+			{
+				bJumping = false;
+				posPlayer.y = startY;
 			}
-		}
+			else //SIGUE SALTANDO
+			{
+				//if (sprite->animation() == START_JUMP_RIGHT /*&& sprite->checkChangeAnimation(START_JUMP_RIGHT)*/) {
+					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+					if (jumpAngle > 90)
+						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+				//}
+			}
 	}
 	else
 	{	
