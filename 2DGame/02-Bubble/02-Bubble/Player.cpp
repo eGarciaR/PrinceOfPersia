@@ -14,7 +14,7 @@
 enum PlayerAnims
 {
 	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT, FALL_LEFT, START_FALL_RIGHT, 
-	MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING, START_JUMP_RIGHT, JUMP_RIGHT, JUMP_FALL_RIGHT
+	MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING, START_JUMP_RIGHT, JUMP_RIGHT, JUMP_FALL_RIGHT, JUMP_LEFT, START_JUMP_LEFT
 };
 
 
@@ -23,7 +23,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(18);
+	sprite->setNumberAnimations(20);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -119,45 +119,64 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if (sprite->animation() == STAND_RIGHT) {
-			sprite->changeAnimation(MOVE_TO_LEFT);
-			posPlayer.x += 2;
-		}
-		if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
-			//sprite->changeAnimation(START_LEFT);	// Cambiamos animación a empezar a correr
-			sprite->changeAnimation(START_LEFT);
-		}
-		if (sprite->animation() == START_LEFT) {	
-			if (sprite->checkChangeAnimation(START_LEFT))	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
-				sprite->changeAnimation(MOVE_LEFT);
-		}
-		posPlayer.x -= 2;
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(40, 32)))
-		{
-			posPlayer.x += 2;
-			sprite->changeAnimation(STAND_LEFT);
+		if (!bJumping){
+			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == START_RIGHT) {
+				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING);
+				posPlayer.x += 2;
+			}
+			if (sprite->animation() == STAND_RIGHT) {
+				sprite->changeAnimation(MOVE_TO_LEFT);
+				posPlayer.x += 2;
+			}
+			if (sprite->animation() == MOVE_TO_LEFT) {
+				if (sprite->checkChangeAnimation(MOVE_TO_LEFT)) {
+					sprite->changeAnimation(STAND_LEFT);
+				}
+				posPlayer.x += 2;
+			}
+			if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
+				sprite->changeAnimation(START_LEFT);
+			}
+			if (sprite->animation() == START_LEFT) {
+				if (sprite->checkChangeAnimation(START_LEFT))	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
+					sprite->changeAnimation(MOVE_LEFT);
+			}
+			posPlayer.x -= 2;
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(40, 40)))
+			{
+				posPlayer.x += 2;
+				sprite->changeAnimation(STAND_LEFT);
+			}
 		}
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (sprite->animation() == STAND_LEFT) {
-			sprite->changeAnimation(MOVE_TO_RIGHT);
-			posPlayer.x -= 2;
-		}
-		if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT && sprite->animation() != MOVE_TO_RIGHT) {
-			sprite->changeAnimation(START_RIGHT);
-		}
-		if (sprite->animation() == START_RIGHT) {
-			if (sprite->checkChangeAnimation(START_RIGHT))
-				sprite->changeAnimation(MOVE_RIGHT);
-		}
+		if (!bJumping){
+			if (sprite->animation() == STAND_LEFT) {
+				sprite->changeAnimation(MOVE_TO_RIGHT);
+				posPlayer.x -= 2;
+			}
+			if (sprite->animation() == MOVE_TO_RIGHT) {
+				if (sprite->checkChangeAnimation(MOVE_TO_RIGHT)) {
+					sprite->changeAnimation(STAND_RIGHT);
+				}
+				posPlayer.x -= 2;
+			}
+			if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT && sprite->animation() != MOVE_TO_RIGHT) {
+				sprite->changeAnimation(START_RIGHT);
+			}
+			if (sprite->animation() == START_RIGHT) {
+				if (sprite->checkChangeAnimation(START_RIGHT))
+					sprite->changeAnimation(MOVE_RIGHT);
+			}
 
-		posPlayer.x += 2;
-		
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(40, 32)))
-		{
-			posPlayer.x -= 2;
-			sprite->changeAnimation(STAND_RIGHT);
+			posPlayer.x += 2;
+
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(40, 40)))
+			{
+				posPlayer.x -= 2;
+				sprite->changeAnimation(STAND_RIGHT);
+			}
 		}
 	}
 	else
@@ -230,14 +249,14 @@ void Player::update(int deltaTime)
 				//if (sprite->animation() == START_JUMP_RIGHT /*&& sprite->checkChangeAnimation(START_JUMP_RIGHT)*/) {
 					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
 					if (jumpAngle > 90)
-						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y);
+						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 72), &posPlayer.y);
 				//}
 			}
 	}
 	else
 	{	
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 64), &posPlayer.y))
+		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 72), &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
