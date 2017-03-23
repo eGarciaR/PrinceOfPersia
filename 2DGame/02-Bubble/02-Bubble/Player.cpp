@@ -6,8 +6,8 @@
 #include "Game.h"
 
 
-#define JUMP_ANGLE_STEP 2
-#define JUMP_HEIGHT 96
+#define JUMP_ANGLE_STEP 4
+#define JUMP_HEIGHT 16
 #define FALL_STEP 4
 
 
@@ -142,7 +142,7 @@ void Player::update(int deltaTime)
 					sprite->changeAnimation(MOVE_LEFT);
 			}
 			posPlayer.x -= 2;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(40, 40)))
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 64)))
 			{
 				posPlayer.x += 2;
 				sprite->changeAnimation(STAND_LEFT);
@@ -172,7 +172,7 @@ void Player::update(int deltaTime)
 
 			posPlayer.x += 2;
 
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(40, 40)))
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 64)))
 			{
 				posPlayer.x -= 2;
 				sprite->changeAnimation(STAND_RIGHT);
@@ -247,7 +247,7 @@ void Player::update(int deltaTime)
 			else //SIGUE SALTANDO
 			{
 				//if (sprite->animation() == START_JUMP_RIGHT /*&& sprite->checkChangeAnimation(START_JUMP_RIGHT)*/) {
-					posPlayer.y = int(startY - 96 * sin(3.14159f * jumpAngle / 180.f));
+					posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 					if (jumpAngle > 90)
 						bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 72), &posPlayer.y);
 				//}
@@ -258,12 +258,15 @@ void Player::update(int deltaTime)
 		posPlayer.y += FALL_STEP;
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 72), &posPlayer.y))
 		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
-				bJumping = true;
-				jumpAngle = 0;
-				startY = posPlayer.y;
-				sprite->changeAnimation(START_JUMP_RIGHT);
+				if (!map->collisionMoveUp(posPlayer, glm::ivec2(32, 72), &posPlayer.y)) {
+					bJumping = true;
+					jumpAngle = 0;
+					startY = posPlayer.y;
+					sprite->changeAnimation(START_JUMP_RIGHT);
+				}
+
 			}
 			else if (sprite->isFalling()) {
 				// Amortiguar caída
