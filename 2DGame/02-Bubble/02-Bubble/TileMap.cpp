@@ -213,14 +213,10 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 
 	for (int x = x0; x <= x1; x++)
 	{
-		printf("%d", map[y*mapSize.x + x]);
-		if (map[y*mapSize.x + x] == 9 || map[y*mapSize.x + x] == 3)
+		if (map[y*mapSize.x + x] == 5 || map[y*mapSize.x + x] == 7 || map[y*mapSize.x + x] == 2)
 		{
-			printf("Posy: %d ", *posY);
-			printf("Y: %d ", y);
 			if (*posY - 64 * y<= 56)
 			{
-				printf("hoool");
 				//*posY = y;//*posY =  64 * y - size.y;
 				return true;
 			}
