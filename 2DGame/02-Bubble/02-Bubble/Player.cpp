@@ -96,6 +96,11 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	}
 	//sprite->addKeyframe(MOVE_TO_LEFT_RUNNING, glm::vec2(0.45f, 0.55f)); // why????
 
+	sprite->setAnimationSpeed(MOVE_TO_RIGHT_RUNNING, 8);
+	for (float i = 19; i >= 10; --i) {
+		sprite->addKeyframe(MOVE_TO_RIGHT_RUNNING, glm::vec2(0.0f + (i / 20.0f), 0.55f));
+	}
+
 	sprite->setAnimationSpeed(START_JUMP_RIGHT, 8);
 	for (float i = 0; i < 8; ++i) {
 		sprite->addKeyframe(START_JUMP_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.6f));
@@ -137,13 +142,17 @@ void Player::update(int deltaTime)
 	{
 		if (!bJumping){
 			/*Dado que haces el cambio soltando antes la tecla derecha, se tiene q hacer con el STOP*/
-			if (sprite->animation() == STOP_RIGHT/*sprite->animation() == MOVE_RIGHT || sprite->animation() == START_RIGHT*/) {
-				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING); //NO SE XQ NARICES NO LO HACE!!!!!
-				posPlayer.x += 2;
+			//if (sprite->animation() == STOP_RIGHT/*sprite->animation() == MOVE_RIGHT || sprite->animation() == START_RIGHT*/) {
+				//sprite->changeAnimation(MOVE_TO_LEFT_RUNNING); //NO SE XQ NARICES NO LO HACE!!!!!
+				//posPlayer.x += 2;
+			//}
+			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STOP_RIGHT) {
+				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING);
 			}
 			if (sprite->animation() == MOVE_TO_LEFT_RUNNING) {
-				if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING))
+				if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING)) {
 					sprite->changeAnimation(MOVE_LEFT);
+				}
 				posPlayer.x += 2;
 			}
 			if (sprite->animation() == STAND_RIGHT) {
@@ -156,7 +165,7 @@ void Player::update(int deltaTime)
 				}
 				posPlayer.x += 2;
 			}
-			if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
+			if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT && sprite->animation() != MOVE_TO_LEFT_RUNNING) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
 				sprite->changeAnimation(START_LEFT);
 			}
 			if (sprite->animation() == START_LEFT) {
@@ -174,6 +183,15 @@ void Player::update(int deltaTime)
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
 		if (!bJumping){
+			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STOP_LEFT) {
+				sprite->changeAnimation(MOVE_TO_RIGHT_RUNNING);
+			}
+			if (sprite->animation() == MOVE_TO_RIGHT_RUNNING) {
+				if (sprite->checkChangeAnimation(MOVE_TO_RIGHT_RUNNING)) {
+					sprite->changeAnimation(MOVE_RIGHT);
+				}
+				posPlayer.x -= 2;
+			}
 			if (sprite->animation() == STAND_LEFT) {
 				sprite->changeAnimation(MOVE_TO_RIGHT);
 				posPlayer.x -= 2;
@@ -184,7 +202,7 @@ void Player::update(int deltaTime)
 				}
 				posPlayer.x -= 2;
 			}
-			if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT && sprite->animation() != MOVE_TO_RIGHT) {
+			if (sprite->animation() != START_RIGHT && sprite->animation() != MOVE_RIGHT && sprite->animation() != MOVE_TO_RIGHT && sprite->animation() != MOVE_TO_RIGHT_RUNNING) {
 				sprite->changeAnimation(START_RIGHT);
 			}
 			if (sprite->animation() == START_RIGHT) {
@@ -248,6 +266,10 @@ void Player::update(int deltaTime)
 		else if (sprite->animation() == MOVE_TO_LEFT_RUNNING) {
 			if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING))
 				sprite->changeAnimation(MOVE_LEFT);
+		}
+		else if (sprite->animation() == MOVE_TO_RIGHT_RUNNING) {
+			if (sprite->checkChangeAnimation(MOVE_TO_RIGHT_RUNNING))
+				sprite->changeAnimation(MOVE_RIGHT);
 		}
 		else if (sprite->animation() == JUMP_RIGHT) {
 			if (sprite->checkChangeAnimation(JUMP_RIGHT))
