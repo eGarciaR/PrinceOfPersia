@@ -15,7 +15,7 @@ enum PlayerAnims
 {
 	STAND_RIGHT, STAND_LEFT, MOVE_LEFT, MOVE_RIGHT, START_RIGHT, STOP_RIGHT, START_LEFT, STOP_LEFT, FALL_RIGHT, FALL_LEFT, START_FALL_RIGHT, 
 	MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING, START_JUMP_RIGHT, JUMP_RIGHT, JUMP_FALL_RIGHT, JUMP_LEFT, 
-	START_JUMP_LEFT, JUMP_FALL_LEFT
+	START_JUMP_LEFT, JUMP_FALL_LEFT, MOVE_STEP_LEFT
 };
 
 
@@ -24,7 +24,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.05, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(21);
+	sprite->setNumberAnimations(22);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -121,6 +121,11 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.6f));
 	}
 
+	sprite->setAnimationSpeed(MOVE_STEP_LEFT, 8);
+	for (float i = 19; i >= 12; --i) {
+		sprite->addKeyframe(MOVE_STEP_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.8f));
+	}
+
 	sprite->setAnimationSpeed(JUMP_FALL_RIGHT, 8);
 	sprite->addKeyframe(JUMP_FALL_RIGHT, glm::vec2(0.4f, 0.75f));
 	sprite->addKeyframe(JUMP_FALL_RIGHT, glm::vec2(0.45f, 0.75f));
@@ -166,7 +171,9 @@ void Player::update(int deltaTime)
 				posPlayer.x += 2;
 			}
 			if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT && sprite->animation() != MOVE_TO_LEFT_RUNNING) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
-				sprite->changeAnimation(START_LEFT);
+				if (Game::instance().getSpecialKey(GLUT_ACTIVE_SHIFT))
+					sprite->changeAnimation(MOVE_STEP_LEFT);
+				else sprite->changeAnimation(START_LEFT);
 			}
 			if (sprite->animation() == START_LEFT) {
 				if (sprite->checkChangeAnimation(START_LEFT))	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
