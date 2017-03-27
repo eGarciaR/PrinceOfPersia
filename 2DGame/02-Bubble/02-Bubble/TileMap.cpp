@@ -188,12 +188,11 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	int x0, x1, y;
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
-	y = (pos.y + size.y - 1) / 64;
+	y = (pos.y+16 + size.y - 1) / 64;
 	
 	for(int x=x0; x<=x1; x++)
 	{
-		//printf("%d", map[y*mapSize.x + x]);
-		if (map[y*mapSize.x + x] != 8 && map[y*mapSize.x + x] != 6 && map[y*mapSize.x + x] != 7 && map[y*mapSize.x + x] != 3)
+		if (map[y*mapSize.x + x] != 8 && map[y*mapSize.x + x] != 6 && map[y*mapSize.x + x] != 7 && map[y*mapSize.x + x] != 3 && map[y*mapSize.x + x] != 9)
 		{
 			if(*posY - 64 * y + size.y <= 4)
 			{
@@ -211,7 +210,6 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = pos.y / 64;
-
 	for (int x = x0; x <= x1; x++)
 	{
 		if (map[y*mapSize.x + x] == 5 || map[y*mapSize.x + x] == 7 || map[y*mapSize.x + x] == 2)
@@ -221,6 +219,22 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 				//*posY = y;//*posY =  64 * y - size.y;
 				return true;
 			}
+		}
+	}
+	return false;
+}
+
+bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, bool right) const
+{
+	int x0, x1, y;
+	x0 = pos.x / tileSize;
+	x1 = (pos.x + size.x - 1) / tileSize;
+	y = pos.y / 64;
+	if (map[y*mapSize.x + x0] == 9 && map[y*mapSize.x + x1] == 5)
+	{
+		if (*posY - 64 * y <= 56)
+		{
+			return true;
 		}
 	}
 	return false;
