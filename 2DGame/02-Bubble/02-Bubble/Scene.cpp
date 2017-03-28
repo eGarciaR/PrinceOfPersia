@@ -30,6 +30,7 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
+	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	//map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
@@ -90,5 +91,19 @@ void Scene::initShaders()
 	fShader.free();
 }
 
+string Scene::getLevel()
+{
+	return level;
+}
+
+void Scene::setLevel(string s, glm::vec2 &pos){
+	initShaders();
+	map = TileMap::createTileMap(s, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	//map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->setPosition(glm::vec2(pos.x, pos.y));
+	player->setTileMap(map);
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	currentTime = 0.0f;
+}
 
 

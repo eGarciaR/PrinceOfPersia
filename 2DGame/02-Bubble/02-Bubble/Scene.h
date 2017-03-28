@@ -19,9 +19,18 @@ public:
 	Scene();
 	~Scene();
 
+	static Scene &instance()
+	{
+		static Scene S;
+
+		return S;
+	}
+
 	void init();
 	void update(int deltaTime);
 	void render();
+	string getLevel();
+	void setLevel(string s, glm::vec2 &pos);
 
 private:
 	void initShaders();
@@ -32,6 +41,7 @@ private:
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
+	string level;
 
 };
 

@@ -7,12 +7,12 @@ void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
-	scene.init();
+	Scene::instance().init();
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
+	Scene::instance().update(deltaTime);
 	
 	return bPlay;
 }
@@ -20,7 +20,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	Scene::instance().render();
 }
 
 void Game::keyPressed(int key)

@@ -83,10 +83,12 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<mapSize.x; i++)
 		{
 			fin.get(tile);
-			if(tile == ' ')
-				map[j*mapSize.x+i] = 0;
-			else
-				map[j*mapSize.x+i] = tile - int('0');
+			if (tile == ' ') {
+				//map[j*mapSize.x+i] = 0;
+			}
+			else {
+				map[j*mapSize.x + i] = tile - int('0');
+			}
 		}
 		fin.get(tile);
 #ifndef _WIN32
@@ -186,13 +188,13 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
 {
 	int x0, x1, y;
-	x0 = pos.x / tileSize;
-	x1 = (pos.x + size.x - 1) / tileSize;
+	x0 = (pos.x+16) / tileSize;
+	x1 = ((pos.x) + size.x - 1) / tileSize;
 	y = (pos.y+16 + size.y - 1) / 64;
 	
 	for(int x=x0; x<=x1; x++)
 	{
-		if (map[y*mapSize.x + x] != 8 && map[y*mapSize.x + x] != 6 && map[y*mapSize.x + x] != 7 && map[y*mapSize.x + x] != 3 && map[y*mapSize.x + x] != 9)
+		if (map[y*mapSize.x + x] != 8 && map[y*mapSize.x + x] != 6 && map[y*mapSize.x + x] != 7 /*&& map[y*mapSize.x + x] != 3*/ && map[y*mapSize.x + x] != 9)
 		{
 			if(*posY - 64 * y + size.y <= 4)
 			{
