@@ -202,12 +202,9 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	int x0, x1, y;
 	x0 = (pos.x+16) / tileSize;
 	x1 = ((pos.x) + size.x - 1) / tileSize;
-	//if (pos.y > 120) y = (pos.y-24 + size.y - 1) / 64;
 	y = (pos.y + size.y - 1) / 64;
-	//printf("%d", y);
 	for(int x=x0; x<=x1; x++)
 	{
-		printf("%d ", map[y*mapSize.x + x]);
 		if (map[y*mapSize.x + x] != 4 && map[y*mapSize.x + x] != 10 && map[y*mapSize.x + x] != 9)
 		{
 			if(*posY - 64 * y + size.y <= 4)
@@ -226,15 +223,15 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = pos.y / 64;
-	for (int x = x0; x <= x1; x++)
+	printf("%d :", map[y*mapSize.x + x1]);
+	//DEPURAR!!!!!!!!!!
+	if (map[y*mapSize.x + x0] == 1 || map[y*mapSize.x + x1] == 5 || map[y*mapSize.x + x1] == 7 || map[y*mapSize.x + x1] == 2 || map[y*mapSize.x + x1] == 6 || map[y*mapSize.x + x1] == 13 || map[y*mapSize.x + x1] == 3)
 	{
-		if (map[y*mapSize.x + x] == 5 || map[y*mapSize.x + x] == 7 || map[y*mapSize.x + x] == 2)
+
+		if (*posY - 64 * y <= 56)
 		{
-			if (*posY - 64 * y<= 56)
-			{
-				//*posY = y;//*posY =  64 * y - size.y;
-				return true;
-			}
+			//*posY = y;//*posY =  64 * y - size.y;
+			return true;
 		}
 	}
 	return false;
@@ -246,11 +243,22 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = pos.y / 64;
-	if (map[y*mapSize.x + x0] == 9 && map[y*mapSize.x + x1] == 5)
-	{
-		if (*posY - 64 * y <= 56)
+	if (right){
+		if ((map[y*mapSize.x + x0] == 9 || map[y*mapSize.x + x0] == 11) && (map[y*mapSize.x + x1] == 5 || map[y*mapSize.x + x1] == 7 || map[y*mapSize.x + x1] == 6))
 		{
-			return true;
+			if (*posY - 64 * y <= 56)
+			{
+				return true;
+			}
+		}
+	}
+	else{
+		if ((map[y*mapSize.x + x1] == 9 || map[y*mapSize.x + x1] == 11 || map[y*mapSize.x + x1] == 4) && (map[y*mapSize.x + x0] == 7 || map[y*mapSize.x + x0] == 6 || map[y*mapSize.x + x0] == 1))
+		{
+			if (*posY - 64 * y <= 56)
+			{
+				return true;
+			}
 		}
 	}
 	return false;

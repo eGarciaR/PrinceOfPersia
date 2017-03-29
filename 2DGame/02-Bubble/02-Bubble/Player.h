@@ -24,7 +24,7 @@ public:
 private:
 	bool bJumping, climbing, face_direction;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY, height_air;
+	int jumpAngle, startY, height_air, distancia;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;

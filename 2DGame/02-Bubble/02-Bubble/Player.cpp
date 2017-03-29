@@ -24,6 +24,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	climbing = false;
 	face_direction = true;
+	distancia = 64;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.05, 0.05), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(28);
@@ -73,12 +74,12 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->addKeyframe(STOP_LEFT, glm::vec2(0.f, 0.1f));
 
 	sprite->setAnimationSpeed(FALL_RIGHT, 8);
-	for (float i = 1; i < 10; ++i) {
+	for (float i = 2; i < 10; ++i) {
 		sprite->addKeyframe(FALL_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.25f));
 	}
 
 	sprite->setAnimationSpeed(FALL_LEFT, 8);
-	for (float i = 18; i >= 10; --i) {
+	for (float i = 17; i >= 10; --i) {
 		sprite->addKeyframe(FALL_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.25f));
 	}
 
@@ -181,7 +182,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	printf("PosX: %d, PosY: %d ", posPlayer.x, posPlayer.y);
+	//printf("PosX: %d, PosY: %d ", posPlayer.x, posPlayer.y);
 	if (strcmp(Scene::instance().getLevel().c_str(),"levels/prince-map1.txt") == 0) {
 		if (posPlayer.x >= 249 && posPlayer.y >= 120) {
 			Scene::instance().setLevel("levels/prince-map2.txt", glm::vec2(0, 120));
@@ -192,7 +193,7 @@ void Player::update(int deltaTime)
 	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if (!bJumping && !climbing && !sprite->isFalling() && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT){
+		if (!bJumping && !climbing && distancia==0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT){
 			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STOP_RIGHT) {
 				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING);
 				face_direction = false;
@@ -242,7 +243,7 @@ void Player::update(int deltaTime)
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (!bJumping && !climbing && !sprite->isFalling() && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT){
+		if (!bJumping && !climbing && distancia==0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT){
 			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STOP_LEFT) {
 				sprite->changeAnimation(MOVE_TO_RIGHT_RUNNING);
 				face_direction = true;
@@ -266,7 +267,6 @@ void Player::update(int deltaTime)
 			}
 			if (sprite->animation() == STAND_RIGHT) {
 				if (Game::instance().getSpecialKey(SHIFT))/*TODO: SHIFT*/ {
-					printf("2");
 					sprite->changeAnimation(MOVE_STEP_RIGHT);
 					posPlayer.x -= 2;
 				}
@@ -351,7 +351,7 @@ void Player::update(int deltaTime)
 		}
 		else if (sprite->animation() == JUMP_RIGHT) {
 			if (sprite->checkChangeAnimation(JUMP_RIGHT)) {
-				if(!climbing)sprite->changeAnimation(JUMP_FALL_RIGHT);
+				if (!climbing)sprite->changeAnimation(JUMP_FALL_RIGHT);
 				else sprite->changeAnimation(CLIMB_RIGHT);
 			}
 		}
@@ -411,7 +411,6 @@ void Player::update(int deltaTime)
 		}
 	}
 	else if (climbing) {
-		printf("11111111111111");
 		if (sprite->animation() == CLIMB_RIGHT || sprite->animation() == CLIMB_LEFT || sprite->animation() == JUMP_RIGHT || sprite->animation() == JUMP_LEFT){
 			jumpAngle += JUMP_ANGLE_STEP;
 		}
@@ -442,7 +441,7 @@ void Player::update(int deltaTime)
 	}
 	else
 	{	
-		if (sprite->isFalling() && sprite->animation() != START_FALL_RIGHT && sprite->animation() != START_FALL_LEFT) {
+		if (distancia > 2 && sprite->animation() != START_FALL_RIGHT && sprite->animation() != START_FALL_LEFT && sprite->animation() != FALL_RIGHT && sprite->animation() != FALL_LEFT) {
 			if (face_direction)
 				sprite->changeAnimation(START_FALL_RIGHT);
 			else sprite->changeAnimation(START_FALL_LEFT);
@@ -450,37 +449,50 @@ void Player::update(int deltaTime)
 		posPlayer.y += FALL_STEP;
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 8), &posPlayer.y))
 		{
+			distancia = 0;
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
-				
 				bJumping = true;
+				distancia = 0;
 				jumpAngle = 0;
 				startY = posPlayer.y;
 				if (!map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y)) {
 					height_air = 180;
 				}
 				else {
-					if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, true)) {
-						climbing = true;
-						bJumping = false;
-						int posX = posPlayer.x % 32;
-						if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
-						else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
-						height_air = 48;
+					height_air = 48;
+					distancia -= 10;
+					if (face_direction){
+						if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, true)) {
+							climbing = true;
+							bJumping = false;
+							int posX = posPlayer.x % 32;
+							if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+							else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+						}
+					}
+					else{
+						if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, false)) {
+							climbing = true;
+							bJumping = false;
+							int posX = posPlayer.x % 32;
+							if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+							else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+						}
 					}
 				}
 				if (face_direction) sprite->changeAnimation(START_JUMP_RIGHT);
 				else sprite->changeAnimation(START_JUMP_LEFT);
 			}
-			else if (sprite->isFalling()) {
+			else if (distancia >= 58) {
 				// Amortiguar caída
 				if (face_direction) sprite->changeAnimation(FALL_RIGHT);
 				else sprite->changeAnimation(FALL_LEFT);
+				distancia = 0;
 			}
-			sprite->falling(false);
 		}
 		else {
-			sprite->falling(true);
+			distancia += FALL_STEP;
 		}
 	}
 	
