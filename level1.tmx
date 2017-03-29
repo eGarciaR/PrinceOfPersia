@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="11" height="3" tilewidth="32" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="Tiles-mapa" tilewidth="64" tileheight="64" tilecount="25" columns="5">
+  <image source="2DGame/02-Bubble/02-Bubble/images/Tiles-mapa.png" width="320" height="320"/>
+ </tileset>
+ <layer name="Capa de Patrones 1" width="11" height="3">
+  <data encoding="csv">
+3,9,9,9,5,7,5,7,5,13,2,
+3,6,6,7,1,4,13,2,13,2,13,
+2,13,2,13,3,8,1,10,7,5,2
+</data>
+ </layer>
+</map>

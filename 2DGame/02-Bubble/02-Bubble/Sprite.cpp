@@ -80,6 +80,11 @@ void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
 		animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
 }
 
+void Sprite::setSpeed(int animId, glm::vec3 speed) {
+	//speed[animId].movement();
+	//animations[animId].keyFrameSpeed.push_back(speed);
+}
+
 void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
 {
 	if(animId < int(animations.size()))

@@ -19,6 +19,10 @@ struct AnimKeyframes
 	vector<glm::vec2> keyframeDispl;
 };
 
+struct Movements
+{
+	vector<glm::vec2> movement;
+};
 
 #endif // _ANIMATION_KEYFRAMES
 

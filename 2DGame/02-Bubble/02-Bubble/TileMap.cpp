@@ -51,6 +51,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	string line, tilesheetFile;
 	stringstream sstream;
 	char tile;
+	bool previousNumber = false;
 	
 	fin.open(levelFile.c_str());
 	if(!fin.is_open())
@@ -80,14 +81,25 @@ bool TileMap::loadLevel(const string &levelFile)
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
-		for(int i=0; i<mapSize.x; i++)
+		for(int i=0; i<(mapSize.x*2); i++)
 		{
 			fin.get(tile);
+			/*while (tile != ' ') {
+
+			}*/
 			if (tile == ' ') {
-				//map[j*mapSize.x+i] = 0;
+				previousNumber = false;
 			}
 			else {
-				map[j*mapSize.x + i] = tile - int('0');
+				if (previousNumber) {
+					int previous = map[j*mapSize.x + (i-1)/2];
+					map[j*mapSize.x + (i/2)] = (previous * 10) + (tile - int('0'));
+					previousNumber = false;
+				}
+				else  {
+					map[j*mapSize.x + (i / 2)] = tile - int('0');
+					previousNumber = true;
+				}
 			}
 		}
 		fin.get(tile);
@@ -161,7 +173,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = ((pos.y + 8) + size.y - 1) / 64;
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3)
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13)
 			return true;
 	}
 	
@@ -178,7 +190,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2)
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 13)
 			return true;
 	}
 	
@@ -190,11 +202,13 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	int x0, x1, y;
 	x0 = (pos.x+16) / tileSize;
 	x1 = ((pos.x) + size.x - 1) / tileSize;
-	y = (pos.y+16 + size.y - 1) / 64;
-	
+	//if (pos.y > 120) y = (pos.y-24 + size.y - 1) / 64;
+	y = (pos.y + size.y - 1) / 64;
+	//printf("%d", y);
 	for(int x=x0; x<=x1; x++)
 	{
-		if (map[y*mapSize.x + x] != 8 && map[y*mapSize.x + x] != 6 && map[y*mapSize.x + x] != 7 /*&& map[y*mapSize.x + x] != 3*/ && map[y*mapSize.x + x] != 9)
+		printf("%d ", map[y*mapSize.x + x]);
+		if (map[y*mapSize.x + x] != 4 && map[y*mapSize.x + x] != 10 && map[y*mapSize.x + x] != 9)
 		{
 			if(*posY - 64 * y + size.y <= 4)
 			{
