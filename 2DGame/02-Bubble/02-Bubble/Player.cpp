@@ -182,13 +182,23 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	//printf("PosX: %d, PosY: %d ", posPlayer.x, posPlayer.y);
 	if (strcmp(Scene::instance().getLevel().c_str(),"levels/prince-map1.txt") == 0) {
 		if (posPlayer.x >= 249 && posPlayer.y >= 120) {
 			Scene::instance().setLevel("levels/prince-map2.txt", glm::vec2(0, 120));
 		}
 		else if (posPlayer.x >= 208 && posPlayer.y >= 120) {
 			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, 0));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map3.txt") == 0) {
+		printf("PosX: %d, PosY: %d ", posPlayer.x, posPlayer.y);
+		if (posPlayer.x >= 314 && posPlayer.y >= 56) {
+			Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(6, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map4.txt") == 0) {
+		if (posPlayer.x <= 5 && posPlayer.y >= 56) {
+			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(313, 56));
 		}
 	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
@@ -228,7 +238,7 @@ void Player::update(int deltaTime)
 					sprite->changeAnimation(MOVE_LEFT);
 			}
 			posPlayer.x -= 2;
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(26, 64)))
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64)))
 			{
 				posPlayer.x += 2;
 				sprite->changeAnimation(STAND_LEFT);
@@ -285,7 +295,7 @@ void Player::update(int deltaTime)
 				posPlayer.x -= 2;
 				sprite->changeAnimation(STAND_RIGHT);
 			}
-			else if (map->collisionMoveLeft(posPlayer, glm::ivec2(26, 64)) && sprite->animation() == MOVE_TO_RIGHT_RUNNING)
+			else if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64)) && sprite->animation() == MOVE_TO_RIGHT_RUNNING)
 			{
 				posPlayer.x += 3;
 				sprite->changeAnimation(STAND_LEFT);
@@ -431,11 +441,17 @@ void Player::update(int deltaTime)
 				}
 				else if (sprite->checkChangeAnimation(CLIMB_LEFT)) {
 					posPlayer.y = startY - 64;
+					posPlayer.x -= 16;
 					sprite->changeAnimation(STAND_LEFT);
 				}
 			}
-			if (jumpAngle > 180)
-				climbing = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 8), &posPlayer.y);
+			if (jumpAngle > 180){
+				if (face_direction) climbing = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 8), &posPlayer.y);
+				else climbing = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 9), &posPlayer.y);
+				printf("%d ", posPlayer.y);
+				//if (climbing) printf("yes ");
+				//else printf(" no");
+			}
 
 		}
 	}
@@ -456,7 +472,7 @@ void Player::update(int deltaTime)
 				distancia = 0;
 				jumpAngle = 0;
 				startY = posPlayer.y;
-				if (!map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y)) {
+				if (!map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y,face_direction)) {
 					height_air = 180;
 				}
 				else {
@@ -475,7 +491,7 @@ void Player::update(int deltaTime)
 						if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, false)) {
 							climbing = true;
 							bJumping = false;
-							int posX = posPlayer.x % 32;
+							int posX = (posPlayer.x % 32);
 							if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
 							else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
 						}

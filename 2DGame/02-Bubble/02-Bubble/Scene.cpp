@@ -104,6 +104,7 @@ void Scene::setLevel(string s, glm::vec2 &pos){
 	player->setTileMap(map);
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
+	level = s;
 }
 
 
