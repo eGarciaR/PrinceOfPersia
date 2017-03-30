@@ -1,0 +1,76 @@
+#include <cmath>
+#include <iostream>
+#include <GL/glew.h>
+#include <GL/glut.h>
+#include "Torch.h"
+#include "Game.h"
+
+
+#define JUMP_ANGLE_STEP 4
+#define JUMP_HEIGHT 16 /*Calibrar*/
+#define FALL_STEP 2
+#define SHIFT 112
+
+enum PlayerAnims
+{
+	ANIMATE
+};
+
+
+void Torch::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+{
+	spritesheet.loadFromFile("images/torch-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sprite = Sprite::createSprite(glm::ivec2(15, 20), glm::vec2(0.1, 0.1), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(1);
+
+	sprite->setAnimationSpeed(ANIMATE, 8);
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.1f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.2f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.3f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.4f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.5f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.6f, 0.0f));
+	sprite->addKeyframe(ANIMATE, glm::vec2(0.7f, 0.0f));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+	sprite->setSpeed(ANIMATE, glm::vec2(0, 0));
+
+	
+	sprite->changeAnimation(0);
+	tileMapDispl = tileMapPos;
+	//printf("%d ", tileMapDispl.x);
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + 120), float(tileMapDispl.y + 120)));
+
+}
+
+void Torch::update(int deltaTime)
+{
+	sprite->update(deltaTime);
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + 105), float(tileMapDispl.y + 66)));
+}
+
+void Torch::render()
+{
+	sprite->render();
+}
+
+void Torch::setTileMap(TileMap *tileMap)
+{
+	map = tileMap;
+}
+
+void Torch::setPosition(const glm::vec2 &pos)
+{
+	posPlayer = pos;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+
+
+
