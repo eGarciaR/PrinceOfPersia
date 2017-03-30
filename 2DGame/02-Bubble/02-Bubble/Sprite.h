@@ -37,7 +37,8 @@ public:
 	void falling(bool fall);
 	
 	void setPosition(const glm::vec2 &pos);
-	void setSpeed(int animId, glm::vec3 speed);
+	void setSpeed(int animId, const glm::vec2 &speed);
+	glm::vec2 getSpeed();
 
 private:
 	Texture *texture;
@@ -50,7 +51,7 @@ private:
 	float timeAnimation;
 	glm::vec2 texCoordDispl;
 	vector<AnimKeyframes> animations;
-	vector<Movements> speed;
+	vector<Movements> speeds;
 
 	bool isSpriteFalling;
 

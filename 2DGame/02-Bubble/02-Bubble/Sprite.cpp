@@ -72,6 +72,8 @@ void Sprite::setNumberAnimations(int nAnimations)
 {
 	animations.clear();
 	animations.resize(nAnimations);
+	speeds.clear();
+	speeds.resize(nAnimations);
 }
 
 void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
@@ -80,9 +82,16 @@ void Sprite::setAnimationSpeed(int animId, int keyframesPerSec)
 		animations[animId].millisecsPerKeyframe = 1000.f / keyframesPerSec;
 }
 
-void Sprite::setSpeed(int animId, glm::vec3 speed) {
+void Sprite::setSpeed(int animId, const glm::vec2 &speed) {
+	if (animId < int(speeds.size()))
+		speeds[animId].movement.push_back(speed);
 	//speed[animId].movement();
 	//animations[animId].keyFrameSpeed.push_back(speed);
+}
+
+glm::vec2 Sprite::getSpeed() {
+	printf("%d:  ", currentAnimation);
+	return speeds[currentAnimation].movement[currentKeyframe];
 }
 
 void Sprite::addKeyframe(int animId, const glm::vec2 &displacement)
