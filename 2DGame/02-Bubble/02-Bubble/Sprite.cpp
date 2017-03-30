@@ -90,7 +90,7 @@ void Sprite::setSpeed(int animId, const glm::vec2 &speed) {
 }
 
 glm::vec2 Sprite::getSpeed() {
-	printf("%d:  ", currentAnimation);
+	//printf("%d:  ", currentAnimation);
 	return speeds[currentAnimation].movement[currentKeyframe];
 }
 
