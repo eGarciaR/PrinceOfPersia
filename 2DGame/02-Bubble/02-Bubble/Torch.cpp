@@ -45,14 +45,16 @@ void Torch::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	//printf("%d ", tileMapDispl.x);
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + 120), float(tileMapDispl.y + 120)));
+	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + 120), float(tileMapDispl.y + 120)));
 
 }
+//Torch::Torch(){
 
-void Torch::update(int deltaTime)
+//}
+void Torch::update(int deltaTime, int x, int y)
 {
 	sprite->update(deltaTime);
-		sprite->setPosition(glm::vec2(float(tileMapDispl.x + 105), float(tileMapDispl.y + 66)));
+		sprite->setPosition(glm::vec2(float(tileMapDispl.x + x), float(tileMapDispl.y + y)));
 }
 
 void Torch::render()
@@ -67,8 +69,8 @@ void Torch::setTileMap(TileMap *tileMap)
 
 void Torch::setPosition(const glm::vec2 &pos)
 {
-	posPlayer = pos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+	posTorch = pos;
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posTorch.x), float(tileMapDispl.y + posTorch.y)));
 }
 
 

@@ -22,6 +22,7 @@ enum PlayerAnims
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	bJumping = false;
+	jump_long = false;
 	climbing = false;
 	face_direction = true;
 	distancia = 64;
@@ -287,7 +288,7 @@ void Player::update(int deltaTime)
 	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
-		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
+		if (!jump_long && !bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
 			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STOP_RIGHT) {
 				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING);
 				face_direction = false;
@@ -337,7 +338,7 @@ void Player::update(int deltaTime)
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_RIGHT))
 	{
-		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
+		if (!jump_long && !bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT ){
 			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STOP_LEFT) {
 				sprite->changeAnimation(MOVE_TO_RIGHT_RUNNING);
 				face_direction = true;
@@ -373,7 +374,10 @@ void Player::update(int deltaTime)
 				}
 			}
 			//posPlayer.x += 2;
-
+			/*if (sprite->animation() == LONG_JUMP_RIGHT) {
+				if (sprite->checkChangeAnimation(LONG_JUMP_RIGHT))
+					sprite->changeAnimation(MOVE_RIGHT);
+			}*/
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(38, 64)))
 			{
 				//posPlayer.x -= 2;
@@ -387,8 +391,6 @@ void Player::update(int deltaTime)
 			}
 		}
 	}
-	//else if (Game::instance().getSpecialKey(GLUT_KEY_UP) && Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
-	//}
 	else
 	{
 		if (sprite->animation() == MOVE_LEFT) {
@@ -489,13 +491,14 @@ void Player::update(int deltaTime)
 		else if (sprite->animation() == LONG_JUMP_RIGHT) {
 			if (sprite->checkChangeAnimation(LONG_JUMP_RIGHT)) {
 				//posPlayer.x -=16;
-				sprite->changeAnimation(STAND_RIGHT);
+				jump_long = false;
+				sprite->changeAnimation(MOVE_RIGHT);
 			}
 		}
 		else if (sprite->animation() == LONG_JUMP_LEFT) {
 			if (sprite->checkChangeAnimation(LONG_JUMP_LEFT)) {
 				//posPlayer.x -=16;
-				sprite->changeAnimation(STAND_LEFT);
+				sprite->changeAnimation(MOVE_LEFT);
 			}
 		}
 	}
@@ -546,8 +549,6 @@ void Player::update(int deltaTime)
 			if (jumpAngle > 180){
 				if (face_direction) climbing = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 8), &posPlayer.y);
 				else climbing = !map->collisionMoveDown(posPlayer, glm::ivec2(32, 9), &posPlayer.y);
-				//if (climbing) printf("yes ");
-				//else printf(" no");
 			}
 
 		}
@@ -565,8 +566,14 @@ void Player::update(int deltaTime)
 			distancia = 0;
 			if (Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
-				if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LONG_JUMP_RIGHT) sprite->changeAnimation(LONG_JUMP_RIGHT);
-				else if (sprite->animation() == MOVE_LEFT || sprite->animation() == LONG_JUMP_LEFT) sprite->changeAnimation(LONG_JUMP_LEFT);
+				if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LONG_JUMP_RIGHT){
+						sprite->changeAnimation(LONG_JUMP_RIGHT);
+						jump_long = true;
+				}
+				else if (sprite->animation() == MOVE_LEFT || sprite->animation() == LONG_JUMP_LEFT) {
+					sprite->changeAnimation(LONG_JUMP_LEFT);
+					jump_long = true;
+				}
 				else {
 					bJumping = true;
 					distancia = 0;

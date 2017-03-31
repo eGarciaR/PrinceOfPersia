@@ -16,7 +16,7 @@ Scene::Scene()
 {
 	map = NULL;
 	player = NULL;
-	torch = NULL;
+	for (int i = 0; i < antorchas_pos.size(); ++i) torchs.erase(torchs.begin()+i);
 }
 
 Scene::~Scene()
@@ -25,8 +25,10 @@ Scene::~Scene()
 		delete map;
 	if(player != NULL)
 		delete player;
-	if (torch != NULL)
-		delete torch;
+	for (int i = 0; i < antorchas_pos.size(); ++i) {
+		if ((&torchs[i]) != NULL)
+			torchs.erase(torchs.begin()+i);
+	}
 }
 
 
@@ -41,11 +43,16 @@ void Scene::init()
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 
-	//Antorcha
-	torch = new Torch();
-	torch->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	torch->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	torch->setTileMap(map);
+	//Antorchas
+	for (int i = 0; i < antorchas_pos.size(); ++i) {
+		printf("%d %d      ", antorchas_pos[i].x, antorchas_pos[i].y);
+		Torch *torch = new Torch();
+		torch->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		torch->setPosition(glm::vec2(antorchas_pos[i].x * map->getTileSize(), antorchas_pos[i].y * map->getTileSize()));
+		torch->setTileMap(map);
+		torchs.push_back(*torch);
+	}
+
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH+31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 }
@@ -54,7 +61,7 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	torch->update(deltaTime);
+	for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->update(deltaTime, (antorchas_pos[i].x)* map->getTileSize(), (antorchas_pos[i].y+1)* map->getTileSize());
 }
 
 void Scene::render()
@@ -68,7 +75,7 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	torch->render();
+	for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 	player->render();
 }
 
@@ -113,9 +120,26 @@ void Scene::setLevel(string s, glm::vec2 &pos){
 	//map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(pos.x, pos.y));
 	player->setTileMap(map);
+	for (int i = 0; i < antorchas_pos.size(); ++i) {
+		antorchas_pos.erase(antorchas_pos.begin() + i);
+		torchs.erase(torchs.begin() + i);
+	}
+	map = TileMap::createTileMap(s, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	for (int i = 0; i < antorchas_pos.size(); ++i) {
+		Torch *torch = new Torch();
+		torch->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		torch->setPosition(glm::vec2(antorchas_pos[i].x * map->getTileSize(), antorchas_pos[i].y * map->getTileSize()));
+		torch->setTileMap(map);
+		torchs.push_back(*torch);
+	}
+
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	level = s;
+}
+
+void Scene::setAntorcha(glm::ivec2 &pos){
+	antorchas_pos.push_back(pos);
 }
 
 

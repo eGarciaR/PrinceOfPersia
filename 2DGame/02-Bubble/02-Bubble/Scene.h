@@ -32,6 +32,7 @@ public:
 	void render();
 	string getLevel();
 	void setLevel(string s, glm::vec2 &pos);
+	void setAntorcha(glm::ivec2 &pos);
 
 private:
 	void initShaders();
@@ -39,12 +40,13 @@ private:
 private:
 	TileMap *map;
 	Player *player;
-	Torch *torch;
+	//Torch *torch;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
 	string level;
-
+	vector<glm::ivec2> antorchas_pos;
+	vector<Torch> torchs;
 };
 
 

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include "Scene.h"
 
 
 using namespace std;
@@ -84,9 +85,9 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<(mapSize.x*2); i++)
 		{
 			fin.get(tile);
-			/*while (tile != ' ') {
-
-			}*/
+			if ((tile - int('0')) == 6) {
+				Scene::instance().setAntorcha(glm::ivec2(i, j));
+			}
 			if (tile == ' ') {
 				previousNumber = false;
 			}
