@@ -34,23 +34,25 @@ void Scene::init()
 	initShaders();
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	/*for (int i = 0; i < TileMap::get_columna_vector().size(); ++i)
+		columnas[i] = *TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);*/
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-
+	play_music();
 	//Antorchas
 	for (int i = 0; i < antorchas_pos.size(); ++i) {
 		Torch *torch = new Torch();
 		torch->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		torch->setPosition( glm::vec2( (antorchas_pos[i].x * map->getTileSize()), antorchas_pos[i].y * map->getTileSize()+16) );
+		if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;
+		else if (antorchas_pos[i].y == 2) antorchas_pos[i].y = 3;
+		torch->setPosition(glm::vec2((((antorchas_pos[i].x + 1) * map->getTileSize()) + 9), ((antorchas_pos[i].y + 1) * map->getTileSize()) + 18));
 		torch->setTileMap(map);
 		torchs.push_back(*torch);
 	}
-
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH+31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
-	PlaySoundA(LPCSTR("PoP_music.wav"), NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
 
 }
 
@@ -58,7 +60,12 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->update(deltaTime, antorchas_pos[i].x* map->getTileSize(), antorchas_pos[i].y* map->getTileSize());
+	for (int i = 0; i < antorchas_pos.size(); ++i) {
+		if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;
+		else if (antorchas_pos[i].y == 2) antorchas_pos[i].y = 3;
+		(&torchs[i])->update(deltaTime, ((antorchas_pos[i].x + 1) * map->getTileSize()) + 9, ( (antorchas_pos[i].y+1) * map->getTileSize()) +1);
+		
+	}
 }
 
 void Scene::render()
@@ -74,6 +81,7 @@ void Scene::render()
 	map->render();
 	for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 	player->render();
+	// (int i = 0; i < columnas.size(); ++i) columnas[i].render();
 }
 
 void Scene::initShaders()
@@ -139,3 +147,10 @@ void Scene::clear_torchs(){
 	antorchas_pos.clear();
 }
 
+void Scene::play_music(){
+	PlaySoundA(LPCSTR("PoP_music.wav"), NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+}
+
+void Scene::stop_music(){
+	PlaySoundA(NULL, 0, 0);
+}

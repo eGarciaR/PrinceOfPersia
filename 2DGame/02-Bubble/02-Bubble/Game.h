@@ -41,6 +41,7 @@ public:
 	
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
+	bool game_finished, game_over;
 
 private:
 	bool bPlay;                       // Continue to play game?

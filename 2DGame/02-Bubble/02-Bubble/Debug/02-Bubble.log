@@ -1,22 +1,11 @@
-﻿Compilación iniciada a las 01/04/2017 2:44:25.
+﻿Compilación iniciada a las 01/04/2017 21:06:26.
      1>Proyecto "C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" en el nodo 2 (Build destinos).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp Player.cpp Scene.cpp TileMap.cpp Torch.cpp main.cpp
-         Scene.cpp
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(43): warning C4018: '<' : no coinciden signed/unsigned
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(61): warning C4018: '<' : no coinciden signed/unsigned
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(75): warning C4018: '<' : no coinciden signed/unsigned
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(120): warning C4018: '<' : no coinciden signed/unsigned
-         Generando código...
-         Compilando...
-         main.cpp
-         Torch.cpp
-         TileMap.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
          Player.cpp
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(641): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(642): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
-         Game.cpp
-         Generando código...
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\tilemap.h(8): warning C4081: se esperaba '('; se encontró 'newline'
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(628): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(629): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.exe" /INCREMENTAL /NOLOGO /LIBPATH:"..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug" /LIBPATH:..\..\..\libs\freeglut\lib /LIBPATH:"..\..\..\libs\glew-1.13.0\lib\Release\Win32" SOIL.lib glew32.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.lib" /MACHINE:X86 Debug\Game.obj
          Debug\main.obj
@@ -33,4 +22,4 @@
 
 Compilación correcta.
 
-Tiempo transcurrido 00:00:03.60
+Tiempo transcurrido 00:00:00.79

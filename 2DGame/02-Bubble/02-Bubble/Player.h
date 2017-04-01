@@ -28,7 +28,8 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
-
+	void change_level_fast();
+	void change_level();
 };
 
 

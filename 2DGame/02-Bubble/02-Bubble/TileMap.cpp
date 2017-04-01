@@ -41,6 +41,16 @@ void TileMap::render() const
 	glDisable(GL_TEXTURE_2D);
 }
 
+/*void TileMap::render_col() const
+{
+	glEnable(GL_TEXTURE_2D);
+	tilesheet.use();
+	glBindVertexArray(vao);
+	glEnableVertexAttribArray(posLocation);
+	glEnableVertexAttribArray(texCoordLocation);
+	glDrawArrays(GL_TRIANGLES, 0, 6 * 32 * 64);
+	glDisable(GL_TEXTURE_2D);
+}*/
 void TileMap::free()
 {
 	glDeleteBuffers(1, &vbo);
@@ -86,9 +96,7 @@ bool TileMap::loadLevel(const string &levelFile)
 		for(int i=0; i<(mapSize.x*2); i++)
 		{
 			fin.get(tile);
-			if ((tile - int('0')) == 6) {
-				Scene::instance().setAntorcha(glm::ivec2(i/2, j));
-			}
+
 			if (tile == ' ') {
 				previousNumber = false;
 			}
@@ -99,7 +107,12 @@ bool TileMap::loadLevel(const string &levelFile)
 					previousNumber = false;
 				}
 				else  {
-					map[j*mapSize.x + (i / 2)] = tile - int('0');
+					if ((tile - int('0')) == 6) {
+						Scene::instance().setAntorcha(glm::ivec2(i / 2, j));
+					}
+					/*if((tile- int('0')) != 1)*/map[j*mapSize.x + (i / 2)] = tile - int('0');
+					//else column.push_back(glm::ivec2(i / 2, j));
+					
 					previousNumber = true;
 				}
 			}
@@ -207,8 +220,8 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	y = (pos.y + size.y - 1) / 64;
 	for(int x=x0; x<=x1; x++)
 	{
-		//printf("%d ", map[y*mapSize.x + x]);
-		if (map[y*mapSize.x + x] != 4 && map[y*mapSize.x + x] != 10 && map[y*mapSize.x + x] != 9)
+		
+		if (map[y*mapSize.x + x] != 4 && map[y*mapSize.x + x] != 10 && map[y*mapSize.x + x] != 9 && map[y*mapSize.x + x] != 11 && map[y*mapSize.x + x] != 12)
 		{
 			if(*posY - 64 * y + size.y <= 4)
 			{
@@ -272,7 +285,9 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 }
 
 
-
+/*vector<glm::ivec2> TileMap::get_columna_vector(){
+	return column;
+}*/
 
 
 

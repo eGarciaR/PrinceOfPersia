@@ -35,19 +35,22 @@ public:
 	void setLevel(string s, glm::vec2 &pos);
 	void setAntorcha(glm::ivec2 &pos);
 	void clear_torchs();
-
+	void play_music();
+	void stop_music();
 private:
 	void initShaders();
 
 private:
-	TileMap *map;
+	TileMap *map, *col;
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
+
 	glm::mat4 projection;
 	string level;
 	vector<glm::ivec2> antorchas_pos;
 	vector<Torch> torchs;
+	//vector<TileMap> columnas;
 };
 
 

@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "ShaderProgram.h"
-
+#pragma warning
 
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
@@ -24,6 +24,7 @@ public:
 	~TileMap();
 
 	void render() const;
+	void render_col() const;
 	void free();
 	
 	int getTileSize() const { return tileSize; }
@@ -33,7 +34,7 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, bool right) const;
 	bool collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, bool right) const;
-	
+	//static vector<glm::ivec2> get_columna_vector();
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
@@ -47,6 +48,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
+    //static vector<glm::ivec2> column;
 
 };
 
