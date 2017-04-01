@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Torch.h"
+#include <windows.h> 
 
 
 // Scene contains all the entities of our game.
@@ -33,6 +34,7 @@ public:
 	string getLevel();
 	void setLevel(string s, glm::vec2 &pos);
 	void setAntorcha(glm::ivec2 &pos);
+	void clear_torchs();
 
 private:
 	void initShaders();
@@ -40,7 +42,6 @@ private:
 private:
 	TileMap *map;
 	Player *player;
-	//Torch *torch;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

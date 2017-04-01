@@ -79,6 +79,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
+	Scene::instance().clear_torchs();
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
@@ -86,7 +87,7 @@ bool TileMap::loadLevel(const string &levelFile)
 		{
 			fin.get(tile);
 			if ((tile - int('0')) == 6) {
-				Scene::instance().setAntorcha(glm::ivec2(i, j));
+				Scene::instance().setAntorcha(glm::ivec2(i/2, j));
 			}
 			if (tile == ' ') {
 				previousNumber = false;
