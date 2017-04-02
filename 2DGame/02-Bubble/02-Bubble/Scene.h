@@ -8,6 +8,8 @@
 #include "Player.h"
 #include "Torch.h"
 #include <windows.h> 
+#include <conio.h>
+#include <stdio.h>
 
 
 // Scene contains all the entities of our game.
@@ -37,6 +39,9 @@ public:
 	void clear_torchs();
 	void play_music();
 	void stop_music();
+	void set_game_over();
+	void restart_game();
+	bool game_over = true;
 private:
 	void initShaders();
 

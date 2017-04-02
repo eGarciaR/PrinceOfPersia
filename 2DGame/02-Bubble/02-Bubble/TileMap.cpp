@@ -20,7 +20,8 @@ TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoo
 TileMap::TileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
 {
 	loadLevel(levelFile);
-	prepareArrays(minCoords, program);
+	if (strcmp(levelFile.c_str(), "levels/game_over.txt") == 0) prepareArrays(minCoords, program,4);
+	else prepareArrays(minCoords, program, 5);
 }
 
 TileMap::~TileMap()
@@ -107,7 +108,7 @@ bool TileMap::loadLevel(const string &levelFile)
 					previousNumber = false;
 				}
 				else  {
-					if ((tile - int('0')) == 6) {
+					if ((tile - int('0')) == 6 && strcmp(levelFile.c_str(),"levels/game_over.txt") != 0) {
 						Scene::instance().setAntorcha(glm::ivec2(i / 2, j));
 					}
 					/*if((tile- int('0')) != 1)*/map[j*mapSize.x + (i / 2)] = tile - int('0');
@@ -127,7 +128,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	return true;
 }
 
-void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
+void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, int x)
 {
 	int tile, nTiles = 0;
 	glm::vec2 posTile, texCoordTile[2], halfTexel;
@@ -144,7 +145,7 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 				// Non-empty tile
 				nTiles++;
 				posTile = glm::vec2(minCoords.x + i * tileSize, minCoords.y + j * 64);
-				texCoordTile[0] = glm::vec2(float((tile-1)%5) / tilesheetSize.x, float((tile-1)/5) / tilesheetSize.y);//o /5 o /2
+				texCoordTile[0] = glm::vec2(float((tile-1)%x) / tilesheetSize.x, float((tile-1)/x) / tilesheetSize.y);//o /5 o /2
 				texCoordTile[1] = texCoordTile[0] + tileTexSize;
 				//texCoordTile[0] += halfTexel;
 				texCoordTile[1] -= halfTexel;
@@ -220,9 +221,11 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	y = (pos.y + size.y - 1) / 64;
 	for(int x=x0; x<=x1; x++)
 	{
-		
 		if (map[y*mapSize.x + x] != 4 && map[y*mapSize.x + x] != 10 && map[y*mapSize.x + x] != 9 && map[y*mapSize.x + x] != 11 && map[y*mapSize.x + x] != 12)
 		{
+			if (map[y*mapSize.x + x] == 15) {
+				Scene::instance().set_game_over();
+			}
 			if(*posY - 64 * y + size.y <= 4)
 			{
 				*posY = 64 * y - size.y;

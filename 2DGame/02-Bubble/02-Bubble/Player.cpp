@@ -278,7 +278,6 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	change_level_fast();
 	change_level();
-	printf("%d\n", distancia);
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT))
 	{
 		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
@@ -610,7 +609,7 @@ void Player::update(int deltaTime)
 					else sprite->changeAnimation(START_JUMP_LEFT);
 				}
 			}
-			else if (distancia >= 58) {
+			else if (distancia == 58) { //NO SIRVE DE NADA ESTE IF
 				// Amortiguar caída
 				if (face_direction) sprite->changeAnimation(FALL_RIGHT);
 				else sprite->changeAnimation(FALL_LEFT);

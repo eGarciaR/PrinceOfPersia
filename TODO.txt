@@ -1,6 +1,5 @@
 -salto largo sin repetirse y sin caerse al vacio en medio salt
 -vidas
--game over
 - pasar por detras de la columna(orden render)
 -corregir el agacharse y caminar
 
@@ -10,3 +9,4 @@
 -antorchas con vectores - DONE!
 -agacharse al apretar flecha abajo - DONE!
 - acabar niveles rápido - DONE!
+-game over - DONE!

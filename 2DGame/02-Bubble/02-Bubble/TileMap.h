@@ -37,7 +37,7 @@ public:
 	//static vector<glm::ivec2> get_columna_vector();
 private:
 	bool loadLevel(const string &levelFile);
-	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
+	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, int x);
 
 private:
 	GLuint vao;

@@ -32,6 +32,7 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
+	game_over = false;
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	/*for (int i = 0; i < TileMap::get_columna_vector().size(); ++i)
@@ -59,12 +60,14 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	player->update(deltaTime);
-	for (int i = 0; i < antorchas_pos.size(); ++i) {
-		if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;
-		else if (antorchas_pos[i].y == 2) antorchas_pos[i].y = 3;
-		(&torchs[i])->update(deltaTime, ((antorchas_pos[i].x + 1) * map->getTileSize()) + 9, ( (antorchas_pos[i].y+1) * map->getTileSize()) +1);
-		
+	if (!game_over){
+		player->update(deltaTime);
+		for (int i = 0; i < antorchas_pos.size(); ++i) {
+			if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;
+			else if (antorchas_pos[i].y == 2) antorchas_pos[i].y = 3;
+			(&torchs[i])->update(deltaTime, ((antorchas_pos[i].x + 1) * map->getTileSize()) + 9, ((antorchas_pos[i].y + 1) * map->getTileSize()) + 1);
+
+		}
 	}
 }
 
@@ -79,8 +82,10 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
-	player->render();
+	if(!game_over){
+		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
+		player->render();
+	}
 	// (int i = 0; i < columnas.size(); ++i) columnas[i].render();
 }
 
@@ -153,4 +158,18 @@ void Scene::play_music(){
 
 void Scene::stop_music(){
 	PlaySoundA(NULL, 0, 0);
+}
+
+void Scene::set_game_over(){
+	game_over = true;
+	initShaders();
+	map = TileMap::createTileMap("levels/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
+	currentTime = 0.0f;
+	stop_music();
+}
+
+void Scene::restart_game(){
+	game_over = false;
+	init();
 }

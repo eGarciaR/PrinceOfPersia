@@ -28,6 +28,9 @@ void Game::keyPressed(int key)
 {
 	if(key == 27) // Escape code
 		bPlay = false;
+	else if (key > 0 && Scene::instance().game_over){
+		Scene::instance().restart_game();
+	}
 	keys[key] = true;
 }
 
