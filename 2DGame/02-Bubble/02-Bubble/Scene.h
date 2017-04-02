@@ -37,7 +37,7 @@ public:
 	void setLevel(string s, glm::vec2 &pos, string column);
 	void setAntorcha(glm::ivec2 &pos);
 	void clear_torchs();
-	void play_music();
+	void play_music(char * s, bool loop);
 	void stop_music();
 	void set_game_over();
 	void restart_game();

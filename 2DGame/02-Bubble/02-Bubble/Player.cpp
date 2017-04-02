@@ -25,6 +25,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	climbing = false;
 	agachado = false;
+	music_collision = false;
 	face_direction = true;
 	distancia = 64;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
@@ -299,12 +300,24 @@ void Player::update(int deltaTime)
 		if (sprite->animation() == LONG_JUMP_LEFT) {
 			if (sprite->checkChangeAnimation(LONG_JUMP_LEFT)) {
 				sprite->changeAnimation(MOVE_LEFT);
+				if (!music_collision){
+					Scene::instance().play_music("collision_step.wav", true);
+					music_collision = true;
+					music_step = true;
+				}
 			}
 		}
 		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
 			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STOP_RIGHT) {
 				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING);
 				face_direction = false;
+			}
+			if (sprite->animation() == MOVE_LEFT || sprite->animation() == START_LEFT){
+				if (!music_collision){
+					Scene::instance().play_music("collision_step.wav", true);
+					music_collision = true;
+					music_step = true;
+				}
 			}
 			if (sprite->animation() == MOVE_TO_LEFT_RUNNING) {
 				if (sprite->checkChangeAnimation(MOVE_TO_LEFT_RUNNING)) {
@@ -334,10 +347,18 @@ void Player::update(int deltaTime)
 			}
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64)))
 			{
+				if (!music_collision){
+					Scene::instance().play_music("collision_wall.wav", false);
+					music_collision = true;
+				}
 				sprite->changeAnimation(STAND_LEFT);
 			}
 			else if (map->collisionMoveRight(posPlayer, glm::ivec2(38, 64)) && sprite->animation() == MOVE_TO_LEFT_RUNNING)
 			{
+				if (!music_collision){
+					Scene::instance().play_music("collision_wall.wav", false);
+					music_collision = true;
+				}
 				sprite->changeAnimation(STAND_RIGHT);
 				face_direction = true;
 			}
@@ -348,6 +369,11 @@ void Player::update(int deltaTime)
 		if (sprite->animation() == LONG_JUMP_RIGHT) {
 			if (sprite->checkChangeAnimation(LONG_JUMP_RIGHT)) {
 				sprite->changeAnimation(MOVE_RIGHT);
+				if (!music_collision){
+					Scene::instance().play_music("collision_step.wav", true);
+					music_collision = true;
+					music_step = true;
+				}
 			}
 		}
 		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT )
@@ -355,6 +381,13 @@ void Player::update(int deltaTime)
 			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STOP_LEFT) {
 				sprite->changeAnimation(MOVE_TO_RIGHT_RUNNING);
 				face_direction = true;
+			}
+			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == START_RIGHT){
+				if (!music_collision){
+					Scene::instance().play_music("collision_step.wav", true);
+					music_collision = true;
+					music_step = true;
+				}
 			}
 			if (sprite->animation() == MOVE_TO_RIGHT_RUNNING) {
 				if (sprite->checkChangeAnimation(MOVE_TO_RIGHT_RUNNING)) {
@@ -385,10 +418,18 @@ void Player::update(int deltaTime)
 			}
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(38, 64)))
 			{
+				if (!music_collision){
+					Scene::instance().play_music("collision_wall.wav", false);
+					music_collision = true;
+				}
 				sprite->changeAnimation(STAND_RIGHT);
 			}
 			else if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64)) && sprite->animation() == MOVE_TO_RIGHT_RUNNING)
 			{
+				if (!music_collision){
+					Scene::instance().play_music("collision_wall.wav", false);
+					music_collision = true;
+				}
 				sprite->changeAnimation(STAND_LEFT);
 				face_direction = false;
 			}
@@ -409,6 +450,11 @@ void Player::update(int deltaTime)
 	}
 	else
 	{
+		music_collision = false;
+		if (music_step)	{
+			Scene::instance().stop_music();
+			music_step = false;
+		}
 		if (sprite->animation() == MOVE_LEFT) {
 			sprite->changeAnimation(STOP_LEFT);
 		}
@@ -612,9 +658,19 @@ void Player::update(int deltaTime)
 				{
 					if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LONG_JUMP_RIGHT){
 						sprite->changeAnimation(LONG_JUMP_RIGHT);
+						if (music_step)	{
+							Scene::instance().stop_music();
+							music_step = false;
+							music_collision = false;
+						}
 					}
 					else if (sprite->animation() == MOVE_LEFT || sprite->animation() == LONG_JUMP_LEFT) {
 						sprite->changeAnimation(LONG_JUMP_LEFT);
+						if (music_step)	{
+							Scene::instance().stop_music();
+							music_step = false;
+							music_collision = false;
+						}
 					}
 					else {
 						bJumping = true;
@@ -657,6 +713,10 @@ void Player::update(int deltaTime)
 					if (face_direction) sprite->changeAnimation(FALL_RIGHT);
 					else sprite->changeAnimation(FALL_LEFT);
 					distancia = 0;
+					if (!music_collision){
+						Scene::instance().play_music("collision_floor.wav", false);
+						music_collision = true;
+					}
 				}
 				else distancia = 0;
 			}

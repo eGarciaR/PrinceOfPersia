@@ -41,7 +41,7 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	//play_music();
+	//play_music("PoP_music.wav", true);
 	//Antorchas
 	for (int i = 0; i < antorchas_pos.size(); ++i) {
 		Torch *torch = new Torch();
@@ -159,8 +159,9 @@ void Scene::clear_torchs(){
 	antorchas_pos.clear();
 }
 
-void Scene::play_music(){
-	PlaySoundA(LPCSTR("PoP_music.wav"), NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+void Scene::play_music(char *s, bool loop){
+	if(loop) PlaySoundA(LPCSTR(s), NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
+	else PlaySoundA(LPCSTR(s), NULL, SND_FILENAME | SND_ASYNC);
 }
 
 void Scene::stop_music(){
@@ -174,9 +175,13 @@ void Scene::set_game_over(){
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	stop_music();
+	play_music("game_over.wav", true);
+
 }
 
 void Scene::restart_game(){
+	stop_music();
+	play_music("PoP_music.wav", true);
 	game_over = false;
 	init();
 }
