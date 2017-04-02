@@ -14,10 +14,16 @@ class Player
 {
 
 public:
+	static Player &instance()
+	{
+		static Player p;
+
+		return p;
+	}
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void update(int deltaTime);
 	void render();
-	
+	void die();
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	

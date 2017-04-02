@@ -4,8 +4,6 @@
 #include <vector>
 #include "TileMap.h"
 #include "Scene.h"
-
-
 using namespace std;
 
 
@@ -42,16 +40,7 @@ void TileMap::render() const
 	glDisable(GL_TEXTURE_2D);
 }
 
-/*void TileMap::render_col() const
-{
-	glEnable(GL_TEXTURE_2D);
-	tilesheet.use();
-	glBindVertexArray(vao);
-	glEnableVertexAttribArray(posLocation);
-	glEnableVertexAttribArray(texCoordLocation);
-	glDrawArrays(GL_TRIANGLES, 0, 6 * 32 * 64);
-	glDisable(GL_TEXTURE_2D);
-}*/
+
 void TileMap::free()
 {
 	glDeleteBuffers(1, &vbo);
@@ -90,7 +79,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
-	Scene::instance().clear_torchs();
+	if(levelFile[7] == 'p') Scene::instance().clear_torchs();
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
@@ -111,9 +100,8 @@ bool TileMap::loadLevel(const string &levelFile)
 					if ((tile - int('0')) == 6 && strcmp(levelFile.c_str(),"levels/game_over.txt") != 0) {
 						Scene::instance().setAntorcha(glm::ivec2(i / 2, j));
 					}
-					/*if((tile- int('0')) != 1)*/map[j*mapSize.x + (i / 2)] = tile - int('0');
-					//else column.push_back(glm::ivec2(i / 2, j));
-					
+					map[j*mapSize.x + (i / 2)] = tile - int('0');
+
 					previousNumber = true;
 				}
 			}
@@ -189,7 +177,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = ((pos.y + 8) + size.y - 1) / 64;
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13)
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13 || map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16)
 			return true;
 	}
 	
@@ -206,7 +194,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 13)
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 13 || map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16)
 			return true;
 	}
 	
@@ -223,9 +211,6 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	{
 		if (map[y*mapSize.x + x] != 4 && map[y*mapSize.x + x] != 10 && map[y*mapSize.x + x] != 9 && map[y*mapSize.x + x] != 11 && map[y*mapSize.x + x] != 12)
 		{
-			if (map[y*mapSize.x + x] == 15) {
-				Scene::instance().set_game_over();
-			}
 			if(*posY - 64 * y + size.y <= 4)
 			{
 				*posY = 64 * y - size.y;
@@ -242,7 +227,6 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	x0 = pos.x / tileSize;
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = pos.y / 64;
-
 	if (right){
 		if (map[y*mapSize.x + x1] != 4 && map[y*mapSize.x + x1] != 9 && map[y*mapSize.x + x1] != 11 && map[y*mapSize.x + x1] != 12)
 		{
@@ -288,9 +272,26 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 }
 
 
-/*vector<glm::ivec2> TileMap::get_columna_vector(){
-	return column;
-}*/
+bool TileMap::collisionTrap(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
+{
+	int x0, x1, y;
+	x0 = (pos.x + 16) / tileSize;
+	x1 = ((pos.x) + size.x - 1) / tileSize;
+	y = (pos.y+64 + size.y - 1) / 64;
+	for (int x = x0; x <= x1; x++)
+	{
+		if (map[y*mapSize.x + x] == 15)
+		{
+			if (*posY - 64 * y + size.y <= 4)
+			{
+				*posY = 64 * y - size.y;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 
 
 

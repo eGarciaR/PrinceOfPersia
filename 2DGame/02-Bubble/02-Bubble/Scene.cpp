@@ -15,6 +15,7 @@
 Scene::Scene()
 {
 	map = NULL;
+	col = NULL;
 	player = NULL;
 	clear_torchs();
 }
@@ -35,13 +36,12 @@ void Scene::init()
 	game_over = false;
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	/*for (int i = 0; i < TileMap::get_columna_vector().size(); ++i)
-		columnas[i] = *TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);*/
+	col = TileMap::createTileMap("levels/col1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	play_music();
+	//play_music();
 	//Antorchas
 	for (int i = 0; i < antorchas_pos.size(); ++i) {
 		Torch *torch = new Torch();
@@ -82,11 +82,17 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	if(!game_over){
+	if (!game_over){
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 		player->render();
+		texProgram.use();
+		texProgram.setUniformMatrix4f("projection", projection);
+		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
+		modelview = glm::mat4(1.0f);
+		texProgram.setUniformMatrix4f("modelview", modelview);
+		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+		col->render();
 	}
-	// (int i = 0; i < columnas.size(); ++i) columnas[i].render();
 }
 
 void Scene::initShaders()
@@ -124,9 +130,10 @@ string Scene::getLevel()
 	return level;
 }
 
-void Scene::setLevel(string s, glm::vec2 &pos){
+void Scene::setLevel(string s, glm::vec2 &pos, string column){
 	initShaders();
 	map = TileMap::createTileMap(s, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	col = TileMap::createTileMap(column, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(pos.x, pos.y));
 	player->setTileMap(map);
 

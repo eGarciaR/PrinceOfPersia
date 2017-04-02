@@ -34,7 +34,7 @@ public:
 	void update(int deltaTime);
 	void render();
 	string getLevel();
-	void setLevel(string s, glm::vec2 &pos);
+	void setLevel(string s, glm::vec2 &pos, string column);
 	void setAntorcha(glm::ivec2 &pos);
 	void clear_torchs();
 	void play_music();
@@ -50,12 +50,10 @@ private:
 	Player *player;
 	ShaderProgram texProgram;
 	float currentTime;
-
 	glm::mat4 projection;
 	string level;
 	vector<glm::ivec2> antorchas_pos;
 	vector<Torch> torchs;
-	//vector<TileMap> columnas;
 };
 
 
