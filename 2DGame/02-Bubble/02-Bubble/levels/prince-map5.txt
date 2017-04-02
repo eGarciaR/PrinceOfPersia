@@ -3,6 +3,6 @@ TILEMAP
 32 64            					--Tile size & block size
 images/Tiles-mapa.png					--Tilesheet
 5 5							--Number of tiles in tilesheet
-166 7 5 4 175 7 6 5 1 
+5 6 7 5 4 175 7 6 5 1 
 132 133 4 2 132 132 13
 132 133 15152 132 132 

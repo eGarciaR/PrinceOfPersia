@@ -28,7 +28,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	
 private:
-	bool bJumping, climbing, face_direction, jump_long,agachado, music_collision, music_step;
+	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over;
 	glm::ivec2 tileMapDispl, posPlayer;
 	int jumpAngle, startY, height_air, distancia;
 	Texture spritesheet;

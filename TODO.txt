@@ -1,8 +1,8 @@
--salto largo sin repetirse y sin caerse al vacio en medio salt
 -vidas
-- pasar por detras de la columna(orden render)
--corregir el agacharse y caminar
-
+-corregir musica step + collision_wall
+- vayas con movimiento
+- enemigo
+- cambiar diseño tile 10
 
 
 -musica - DONE!
@@ -10,3 +10,6 @@
 -agacharse al apretar flecha abajo - DONE!
 - acabar niveles rápido - DONE!
 -game over - DONE!
+-corregir el agacharse y caminar - DONE!
+- pasar por detras de la columna(orden render) - DONE!
+-salto largo sin repetirse y sin caerse al vacio en medio salt - DONE!

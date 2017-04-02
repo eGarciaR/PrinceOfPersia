@@ -25,6 +25,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	climbing = false;
 	agachado = false;
+	music_collision_over = false;
 	music_collision = false;
 	face_direction = true;
 	distancia = 64;
@@ -649,7 +650,11 @@ void Player::update(int deltaTime)
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 8), &posPlayer.y))
 		{
 			if (map->collisionTrap(posPlayer, glm::ivec2(32, 8), &posPlayer.y)) {
-				
+				if (!music_collision && !music_collision_over){
+					Scene::instance().play_music("collision_floor.wav", false);
+					music_collision = true;
+					music_collision_over = true;
+				}
 				if (face_direction) sprite->changeAnimation(DIED_RIGHT);
 				else sprite->changeAnimation(DIED_LEFT);
 			}
@@ -751,7 +756,7 @@ void Player::change_level(){
 		if (posPlayer.x >= 249 && posPlayer.y >= 120)
 			Scene::instance().setLevel("levels/prince-map2.txt", glm::vec2(0, 120), "levels/col2.txt");
 		else if (posPlayer.x >= 208 && posPlayer.y >= 120)
-			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, 0), "levels/col3.txt");
+			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, -8), "levels/col3.txt");
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map3.txt") == 0) {
 		if (posPlayer.x >= 314 && posPlayer.y >= 56)
@@ -768,10 +773,24 @@ void Player::change_level(){
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map5.txt") == 0){
 		if (posPlayer.x >= 314 && posPlayer.y == -8)
 			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(4, -8),"levels/col3.txt");
+		else if (posPlayer.x <=5 && posPlayer.y == -8)
+			Scene::instance().setLevel("levels/prince-map7.txt", glm::vec2(313, -8), "levels/col7.txt");
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map6.txt") == 0){
-		if (posPlayer.x < 5 && posPlayer.y == 56)
+		if (posPlayer.x <= 5 && posPlayer.y == 56)
 			Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(313, 56),"levels/col4.txt");
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map7.txt") == 0){
+		if (posPlayer.x <= 158 && posPlayer.y >= 120)
+			Scene::instance().setLevel("levels/prince-map9.txt", glm::vec2(158, -8), "levels/col9.txt");
+		else if (posPlayer.x <= 5 && posPlayer.y == -8)
+			Scene::instance().setLevel("levels/prince-map8.txt", glm::vec2(311, -8), "levels/col8.txt");
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map8.txt") == 0){
+		if (posPlayer.x <= 130 && posPlayer.y >= 120){
+			distancia = 64;
+			Scene::instance().setLevel("levels/prince-map10.txt", glm::vec2(126, -8), "levels/col10.txt");
+		}
 	}
 }
 
