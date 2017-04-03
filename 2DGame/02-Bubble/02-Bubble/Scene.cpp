@@ -63,7 +63,7 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	if (!game_over){
-		player->update(deltaTime);
+		player->update(deltaTime, texProgram);
 		if (enemyVisible) enemy->update(deltaTime, player->getPosition());
 		for (int i = 0; i < antorchas_pos.size(); ++i) {
 			if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;

@@ -20,6 +20,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TileChange.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Torch.h" />
   </ItemGroup>

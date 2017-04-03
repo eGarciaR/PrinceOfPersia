@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include "TileMap.h"
 #include "Scene.h"
-using namespace std;
+#include <cmath>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 
 TileMap *TileMap::createTileMap(const string &levelFile, const glm::vec2 &minCoords, ShaderProgram &program)
@@ -95,6 +96,11 @@ bool TileMap::loadLevel(const string &levelFile)
 					int previous = map[j*mapSize.x + (i-1)/2];
 					map[j*mapSize.x + (i/2)] = (previous * 10) + (tile - int('0'));
 					previousNumber = false;
+					if (map[j*mapSize.x + (i / 2)] == 21) {
+						TileChange t;
+						t.x = i / 2; t.y = j; t.tile = 21; t.status = 21;
+						traps.push_back(t);
+					}
 				}
 				else  {
 					if ((tile - int('0')) == 6 && strcmp(levelFile.c_str(),"levels/game_over.txt") != 0) {
@@ -164,6 +170,15 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, 
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
+void TileMap::changeTile(const glm::ivec2 &pos, int tile, ShaderProgram &shaderProgram) {
+	map[pos.y*mapSize.x + pos.x] = tile;
+	//printf("%d: , %d: ", pos.x, pos.y);
+	prepareArrays(glm::vec2(0, 0), shaderProgram, 5);
+}
+
+void TileMap::changeTileTrap(int pos, int newTile){
+	traps[pos].status = newTile;
+}
 // Collision tests for axis aligned bounding boxes.
 // Method collisionMoveDown also corrects Y coordinate if the box is
 // already intersecting a tile below.
@@ -290,6 +305,32 @@ bool TileMap::collisionTrap(const glm::ivec2 &pos, const glm::ivec2 &size, int *
 		}
 	}
 	return false;
+}
+
+bool TileMap::collisionWith(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, int tile, glm::ivec2 &posTile) const
+{
+	int x0, x1, y;
+	x0 = (pos.x + 16) / tileSize;
+	x1 = ((pos.x) + size.x - 1) / tileSize;
+	y = (pos.y + 64 + size.y - 1) / 64;
+	for (int x = x0; x <= x1; x++)
+	{
+		if (map[y*mapSize.x + x] == tile)
+		{
+			if (*posY - 64 * y + size.y <= 4)
+			{
+				*posY = 64 * y - size.y;
+				posTile.x = x;
+				posTile.y = y;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+vector <TileChange> TileMap::getTraps(){
+	return traps;
 }
 
 

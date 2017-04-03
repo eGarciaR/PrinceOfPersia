@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "TileChange.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -21,7 +22,7 @@ public:
 		return p;
 	}
 	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
-	void update(int deltaTime);
+	void update(int deltaTime, ShaderProgram &program);
 	void render();
 	void die();
 	void setTileMap(TileMap *tileMap);
@@ -36,6 +37,7 @@ private:
 	TileMap *map;
 	void change_level_fast();
 	void change_level();
+	void trapsManagement(ShaderProgram program);
 };
 
 

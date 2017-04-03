@@ -5,7 +5,14 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "ShaderProgram.h"
+#include <windows.h> 
+#include <conio.h>
+#include <stdio.h>
+#include "ShaderProgram.h"
+#include <vector>
+#include "TileChange.h"
 using namespace std;
+
 // Class Tilemap is capable of loading a tile map from a text file in a very
 // simple format (see level01.txt for an example). With this information
 // it builds a single VBO that contains all tiles. As a result the render
@@ -33,7 +40,12 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, bool right) const;
 	bool collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, bool right) const;
-	bool TileMap::collisionTrap(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
+	bool collisionTrap(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const;
+	bool collisionWith(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY, int tile, glm::ivec2 &posTile) const;
+	void changeTile(const glm::ivec2 &pos, int tile, ShaderProgram &shaderProgram);
+	vector <TileChange> getTraps();
+	void changeTileTrap(int pos, int newTile);
+	
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program, int x);
@@ -47,6 +59,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
+	vector< TileChange> traps;
 
 };
 
