@@ -26,7 +26,7 @@ public:
 	void die();
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-	
+	glm::ivec2 getPosition();
 private:
 	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over;
 	glm::ivec2 tileMapDispl, posPlayer;

@@ -51,7 +51,7 @@ void Torch::update(int deltaTime, int x, int y)
 {
 	sprite->update(deltaTime);
 	//printf("%f ", x);
-		sprite->setPosition(glm::vec2(x, y));
+	sprite->setPosition(glm::vec2(x, y));
 }
 
 void Torch::render()

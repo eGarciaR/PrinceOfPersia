@@ -33,11 +33,13 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
+	enemyVisible = false;
 	game_over = false;
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	col = TileMap::createTileMap("levels/col1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
+	enemy = new Enemy();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
@@ -62,6 +64,7 @@ void Scene::update(int deltaTime)
 	currentTime += deltaTime;
 	if (!game_over){
 		player->update(deltaTime);
+		if (enemyVisible) enemy->update(deltaTime, player->getPosition());
 		for (int i = 0; i < antorchas_pos.size(); ++i) {
 			if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;
 			else if (antorchas_pos[i].y == 2) antorchas_pos[i].y = 3;
@@ -85,6 +88,9 @@ void Scene::render()
 	if (!game_over){
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 		player->render();
+		if (enemyVisible) {
+			enemy->render();
+		}
 		texProgram.use();
 		texProgram.setUniformMatrix4f("projection", projection);
 		texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
@@ -130,13 +136,18 @@ string Scene::getLevel()
 	return level;
 }
 
-void Scene::setLevel(string s, glm::vec2 &pos, string column){
+void Scene::setLevel(string s, glm::vec2 &pos, string column, bool showEnemy, glm::ivec2 &posEnemy){
 	initShaders();
 	map = TileMap::createTileMap(s, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	col = TileMap::createTileMap(column, glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(pos.x, pos.y));
 	player->setTileMap(map);
-
+	if (showEnemy) {
+		enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		enemy->setPosition(glm::ivec2(posEnemy.x, posEnemy.y));
+		enemy->setTileMap(map);
+		enemyVisible = true;
+	}
 	for (int i = 0; i < antorchas_pos.size(); ++i) {
 		Torch *torch = new Torch();
 		torch->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -184,4 +195,8 @@ void Scene::restart_game(){
 	play_music("PoP_music.wav", true);
 	game_over = false;
 	init();
+}
+
+void Scene::isEnemyVisible(bool visible) {
+	enemyVisible = visible;
 }
