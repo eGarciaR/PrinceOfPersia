@@ -7,6 +7,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Torch.h"
+#include "Door.h"
 #include "Enemy.h"
 #include <windows.h> 
 #include <conio.h>
@@ -37,13 +38,18 @@ public:
 	string getLevel();
 	void setLevel(string s, glm::vec2 &pos, string column, bool enemy, glm::ivec2 &posEnemy);
 	void setAntorcha(glm::ivec2 &pos);
+	void setDoor(glm::ivec2 &pos);
 	void clear_torchs();
+	void clear_doors();
 	void play_music(char * s, bool loop);
 	void stop_music();
 	void set_game_over();
 	void restart_game();
 	bool game_over;
 	void isEnemyVisible(bool visible);
+	void openDoor();
+	bool isDoorOpened();
+
 private:
 	void initShaders();
 
@@ -56,8 +62,11 @@ private:
 	glm::mat4 projection;
 	string level;
 	vector<glm::ivec2> antorchas_pos;
+	vector<glm::ivec2> door_pos;
 	vector<Torch> torchs;
+	vector<Door> doors;
 	bool enemyVisible;
+	bool doorOpened;
 };
 
 

@@ -60,6 +60,7 @@ private:
 	glm::vec2 tileTexSize;
 	int *map;
 	vector< TileChange> traps;
+	vector< glm::ivec2> doors;
 
 };
 

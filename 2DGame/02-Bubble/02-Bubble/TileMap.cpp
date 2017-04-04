@@ -80,7 +80,10 @@ bool TileMap::loadLevel(const string &levelFile)
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
-	if(levelFile[7] == 'p') Scene::instance().clear_torchs();
+	if (levelFile[7] == 'p') {
+		Scene::instance().clear_torchs();
+		Scene::instance().clear_doors();
+	}
 	map = new int[mapSize.x * mapSize.y];
 	for(int j=0; j<mapSize.y; j++)
 	{
@@ -100,6 +103,9 @@ bool TileMap::loadLevel(const string &levelFile)
 						TileChange t;
 						t.x = i / 2; t.y = j; t.tile = 21; t.status = 21;
 						traps.push_back(t);
+					}
+					else if (map[j*mapSize.x + (i / 2)] == 14 || map[j*mapSize.x + (i / 2)] == 16 && (i / 2) < 10) {
+						Scene::instance().setDoor(glm::ivec2(i / 2, j));
 					}
 				}
 				else  {
@@ -192,7 +198,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = ((pos.y + 8) + size.y - 1) / 64;
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13 || map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16)
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13/* || map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16*/)
 			return true;
 	}
 	
@@ -266,7 +272,7 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = pos.y / 64;
 	if (right){
-		if ((map[y*mapSize.x + x0] == 9 || map[y*mapSize.x + x0] == 11 || map[y*mapSize.x + x0] == 12 || map[y*mapSize.x + x0] == 4 || map[y*mapSize.x + x0] == 19 || map[y*mapSize.x + x0] == 20) && (map[y*mapSize.x + x1] == 5 || map[y*mapSize.x + x1] == 7 || map[y*mapSize.x + x1] == 6 || map[y*mapSize.x + x1] == 1))
+		if ((map[y*mapSize.x + x0] == 9 || map[y*mapSize.x + x0] == 11 || map[y*mapSize.x + x0] == 12 || map[y*mapSize.x + x0] == 4 || map[y*mapSize.x + x0] == 19 || map[y*mapSize.x + x0] == 20) && (map[y*mapSize.x + x1] == 5 || map[y*mapSize.x + x1] == 7 || map[y*mapSize.x + x1] == 6 || map[y*mapSize.x + x1] == 1 || map[y*mapSize.x + x1] == 16 || map[y*mapSize.x + x1] == 14))
 		{
 			if (*posY - 64 * y <= 56)
 			{
@@ -275,7 +281,7 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 		}
 	}
 	else{
-		if ((map[y*mapSize.x + x1] == 9 || map[y*mapSize.x + x1] == 11 || map[y*mapSize.x + x1] == 4 || map[y*mapSize.x + x1] == 12 || map[y*mapSize.x + x1] == 19 || map[y*mapSize.x + x1] == 20) && (map[y*mapSize.x + x0] == 7 || map[y*mapSize.x + x0] == 6 || map[y*mapSize.x + x0] == 1 || map[y*mapSize.x + x0] == 5))
+		if ((map[y*mapSize.x + x1] == 9 || map[y*mapSize.x + x1] == 11 || map[y*mapSize.x + x1] == 4 || map[y*mapSize.x + x1] == 12 || map[y*mapSize.x + x1] == 19 || map[y*mapSize.x + x1] == 20) && (map[y*mapSize.x + x0] == 7 || map[y*mapSize.x + x0] == 6 || map[y*mapSize.x + x0] == 1 || map[y*mapSize.x + x0] == 5 || map[y*mapSize.x + x0] == 16 || map[y*mapSize.x + x0] == 14))
 		{
 			if (*posY - 64 * y <= 56)
 			{

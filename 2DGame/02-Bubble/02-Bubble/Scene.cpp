@@ -18,6 +18,7 @@ Scene::Scene()
 	col = NULL;
 	player = NULL;
 	clear_torchs();
+	clear_doors();
 }
 
 Scene::~Scene()
@@ -35,6 +36,7 @@ void Scene::init()
 	initShaders();
 	enemyVisible = false;
 	game_over = false;
+	doorOpened = false;
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	col = TileMap::createTileMap("levels/col1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -54,6 +56,13 @@ void Scene::init()
 		torch->setTileMap(map);
 		torchs.push_back(*torch);
 	}
+	if (door_pos.size() >= 1) {
+		Door *door = new Door();
+		door->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		door->setPosition(glm::vec2((((door_pos[0].x) * map->getTileSize()) + 12), ((door_pos[0].y) * map->getTileSize()) + 0));
+		door->setTileMap(map);
+		doors.push_back(*door);
+	}
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH+31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 
@@ -71,6 +80,7 @@ void Scene::update(int deltaTime)
 			(&torchs[i])->update(deltaTime, ((antorchas_pos[i].x + 1) * map->getTileSize()) + 9, ((antorchas_pos[i].y + 1) * map->getTileSize()) + 1);
 
 		}
+		if (door_pos.size() >= 1) (&doors[0])->update(deltaTime);
 	}
 }
 
@@ -87,6 +97,7 @@ void Scene::render()
 	map->render();
 	if (!game_over){
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
+		if (door_pos.size() >= 1) (&doors[0])->render();
 		player->render();
 		if (enemyVisible) {
 			enemy->render();
@@ -155,7 +166,13 @@ void Scene::setLevel(string s, glm::vec2 &pos, string column, bool showEnemy, gl
 		torch->setTileMap(map);
 		torchs.push_back(*torch);
 	}
-
+	if (door_pos.size() >= 1) {
+		Door *door = new Door();
+		door->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+		door->setPosition(glm::vec2(door_pos[0].x * map->getTileSize()+12, door_pos[0].y * map->getTileSize()));
+		door->setTileMap(map);
+		doors.push_back(*door);
+	}
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	level = s;
@@ -165,9 +182,30 @@ void Scene::setAntorcha(glm::ivec2 &pos){
 	antorchas_pos.push_back(pos);
 }
 
+void Scene::setDoor(glm::ivec2 &pos){
+	door_pos.push_back(pos);
+}
+
 void Scene::clear_torchs(){
 	torchs.clear();
 	antorchas_pos.clear();
+}
+
+void Scene::clear_doors(){
+	doors.clear();
+	door_pos.clear();
+	doorOpened = false;
+}
+
+void Scene::openDoor() {
+	if (door_pos.size() >= 1 && !doorOpened) {
+		(&doors[0])->changeAnimation();
+		doorOpened = true;
+	}
+}
+
+bool Scene::isDoorOpened() {
+	return doorOpened;
 }
 
 void Scene::play_music(char *s, bool loop){

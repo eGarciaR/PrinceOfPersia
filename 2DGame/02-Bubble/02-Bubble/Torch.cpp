@@ -5,12 +5,6 @@
 #include "Torch.h"
 #include "Game.h"
 
-
-#define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 16 /*Calibrar*/
-#define FALL_STEP 2
-#define SHIFT 112
-
 enum PlayerAnims
 {
 	ANIMATE

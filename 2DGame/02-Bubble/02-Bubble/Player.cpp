@@ -697,6 +697,7 @@ void Player::update(int deltaTime, ShaderProgram &program)
 					for (int i = 0; i < traps.size(); ++i){
 						if (traps[i].x == posTile.x && traps[i].y == posTile.y) map->changeTileTrap(i, 5);
 					}
+					Scene::instance().openDoor();
 				}
 				else{
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP))
