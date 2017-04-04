@@ -45,7 +45,9 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	//play_music("PoP_music.wav", true);
+	
+	life = new Life();
+	life->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	//Antorchas
 	for (int i = 0; i < antorchas_pos.size(); ++i) {
 		Torch *torch = new Torch();
@@ -109,6 +111,7 @@ void Scene::render()
 		texProgram.setUniformMatrix4f("modelview", modelview);
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		col->render();
+		life->render();
 	}
 }
 
@@ -200,12 +203,16 @@ void Scene::clear_doors(){
 void Scene::openDoor() {
 	if (door_pos.size() >= 1 && !doorOpened) {
 		(&doors[0])->changeAnimation();
-		doorOpened = true;
 	}
 }
 
 bool Scene::isDoorOpened() {
+	doorOpened = (&doors[0])->opened();
 	return doorOpened;
+}
+
+void Scene::changeHealthAnimation(int hp){
+	life->changeAnimation(hp);
 }
 
 void Scene::play_music(char *s, bool loop){
@@ -221,7 +228,7 @@ void Scene::set_game_over(){
 	game_over = true;
 	initShaders();
 	map = TileMap::createTileMap("levels/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
+	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT -9), 0.f);
 	currentTime = 0.0f;
 	stop_music();
 	play_music("game_over.wav", true);

@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "TileChange.h"
+#include "Life.h"
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -31,7 +32,7 @@ public:
 private:
 	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over;
 	glm::ivec2 tileMapDispl, posPlayer;
-	int jumpAngle, startY, height_air, distancia;
+	int jumpAngle, startY, height_air, distancia, hp;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;

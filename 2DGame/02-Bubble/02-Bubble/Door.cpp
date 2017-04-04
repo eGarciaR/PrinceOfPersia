@@ -68,3 +68,8 @@ void Door::setPosition(const glm::vec2 &pos)
 	posDoor = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posDoor.x), float(tileMapDispl.y + posDoor.y)));
 }
+
+bool Door::opened(){
+	if (sprite->animation() == STAY_OPEN) return true;
+	return false;
+}

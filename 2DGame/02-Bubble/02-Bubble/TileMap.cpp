@@ -198,8 +198,8 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = ((pos.y + 8) + size.y - 1) / 64;
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13/* || map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16*/)
-			return true;
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 3 || map[y*mapSize.x + x] == 13)
+				return true;
 	}
 	
 	return false;
@@ -215,7 +215,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	
 	for(int y=y0; y<=y1; y++)
 	{
-		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 13 || map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16)
+		if (map[y*mapSize.x + x] == 2 || map[y*mapSize.x + x] == 13)
 			return true;
 	}
 	
@@ -335,6 +335,27 @@ bool TileMap::collisionWith(const glm::ivec2 &pos, const glm::ivec2 &size, int *
 	return false;
 }
 
+bool TileMap::collisionDoor(const glm::ivec2 &pos, const glm::ivec2 &size, bool right) const
+{
+	int x, y0, y1;
+	if (right){
+		x = (pos.x + size.x - 1) / tileSize;
+		y0 = (pos.y + 8) / 64;
+		y1 = ((pos.y + 8) + size.y + -1) / 64;
+	}
+	else{
+		x = pos.x / tileSize;
+		y0 = (pos.y + 8) / 64;
+		y1 = ((pos.y + 8) + size.y - 1) / 64;
+	}
+	for (int y = y0; y <= y1; y++)
+	{
+		if (map[y*mapSize.x + x] == 14 || map[y*mapSize.x + x] == 16)
+			return true;
+	}
+
+	return false;
+}
 vector <TileChange> TileMap::getTraps(){
 	return traps;
 }

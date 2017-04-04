@@ -17,6 +17,7 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	void changeAnimation();
+	bool opened();
 
 private:
 	glm::ivec2 tileMapDispl, posDoor;

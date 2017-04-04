@@ -29,6 +29,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	music_collision = false;
 	face_direction = true;
 	distancia = 64;
+	hp = 3;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.05, 0.05), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(38);
@@ -50,13 +51,13 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	sprite->setSpeed(DIED_LEFT, glm::vec2(0, 0));
 	
 	sprite->setAnimationSpeed(DIED_FALL_LEFT, 8);
-	for (float i = 17; i >= 13; --i) {
+	for (float i = 17; i >= 12; --i) {
 		sprite->addKeyframe(DIED_FALL_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.0f));
 		sprite->setSpeed(DIED_FALL_LEFT, glm::vec2(0, 0));
 	}
 
 	sprite->setAnimationSpeed(DIED_FALL_RIGHT, 8);
-	for (int i = 2; i < 7; ++i){	
+	for (int i = 2; i < 8; ++i){	
 		sprite->addKeyframe(DIED_FALL_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.0f));
 		sprite->setSpeed(DIED_FALL_RIGHT, glm::vec2(0, 0));
 	}
@@ -360,6 +361,13 @@ void Player::update(int deltaTime, ShaderProgram &program)
 				if (sprite->checkChangeAnimation(START_LEFT))	  // Si ha empezado a correr y por el tiempo pasado ya puede hacer el ciclo de correr -> Cambiamos animación
 					sprite->changeAnimation(MOVE_LEFT);
 			}
+			if (map->collisionDoor(posPlayer, glm::ivec2(24, 64), false)){
+				//printf("goo  ");
+				if (!Scene::instance().isDoorOpened()){
+					sprite->changeAnimation(STAND_LEFT);
+				}
+				//printf("goo  ");
+			}
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64)))
 			{
 				if (!music_collision){
@@ -552,10 +560,6 @@ void Player::update(int deltaTime, ShaderProgram &program)
 		else if (sprite->animation() == JUMP_RIGHT) {
 			if (sprite->checkChangeAnimation(JUMP_RIGHT)) {
 				if (!climbing){
-					if (!music_collision){
-						Scene::instance().play_music("collision_wall.wav", false);
-						music_collision = true;
-					}
 					sprite->changeAnimation(JUMP_FALL_RIGHT);
 				}
 				else sprite->changeAnimation(CLIMB_RIGHT);
@@ -568,10 +572,6 @@ void Player::update(int deltaTime, ShaderProgram &program)
 		else if (sprite->animation() == JUMP_LEFT) {
 			if (sprite->checkChangeAnimation(JUMP_LEFT)){
 				if (climbing) {
-					if (!music_collision){
-						Scene::instance().play_music("collision_wall.wav", false);
-						music_collision = true;
-					}
 					sprite->changeAnimation(CLIMB_LEFT);
 				}
 				else sprite->changeAnimation(JUMP_FALL_LEFT);
@@ -675,7 +675,21 @@ void Player::update(int deltaTime, ShaderProgram &program)
 		if (sprite->animation() != LONG_JUMP_LEFT && sprite->animation() != LONG_JUMP_RIGHT)posPlayer.y += FALL_STEP;
 		if(map->collisionMoveDown(posPlayer, glm::ivec2(32, 8), &posPlayer.y))
 		{
+			if (distancia >= 128 && distancia <= 180){
+				--hp;
+				if (hp == 0){
+					Scene::instance().changeHealthAnimation(hp);
+					if (face_direction) sprite->changeAnimation(DIED_FALL_RIGHT);
+					else sprite->changeAnimation(DIED_FALL_LEFT);
+					distancia = 0;
+				}
+				else{
+					if(hp > 0)Scene::instance().changeHealthAnimation(hp);
+				}
+			}
 			if (distancia > 180){
+				hp = 0;
+				Scene::instance().changeHealthAnimation(hp);
 				if (face_direction) sprite->changeAnimation(DIED_FALL_RIGHT);
 				else sprite->changeAnimation(DIED_FALL_LEFT);
 				distancia = 0;
@@ -690,6 +704,8 @@ void Player::update(int deltaTime, ShaderProgram &program)
 					}
 					if (face_direction) sprite->changeAnimation(DIED_RIGHT);
 					else sprite->changeAnimation(DIED_LEFT);
+					hp = 0;
+					Scene::instance().changeHealthAnimation(hp);
 				}
 				else if (map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 21, posTile)) {
 					map->changeTile(glm::ivec2(posTile.x, posTile.y), 5, program);
@@ -796,7 +812,7 @@ void Player::setPosition(const glm::vec2 &pos)
 void Player::change_level(){
 	if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map1.txt") == 0) {
 		if (posPlayer.x >= 208 && posPlayer.y >= 120)
-			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, -8), "levels/col3.txt", false, glm::ivec2(0, 120));
+			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, -72), "levels/col3.txt", false, glm::ivec2(0, 120));
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map3.txt") == 0) {
 		if (posPlayer.x >= 314 && posPlayer.y >= 56) {
