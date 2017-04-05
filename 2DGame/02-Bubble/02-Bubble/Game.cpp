@@ -7,7 +7,7 @@ void Game::init()
 {
 	bPlay = true;
 	game_finished = game_over = false;
-	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	Scene::instance().init();
 }
 

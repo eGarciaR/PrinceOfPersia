@@ -853,7 +853,31 @@ void Player::change_level(){
 			distancia = 64;
 			Scene::instance().setLevel("levels/prince-map10.txt", glm::vec2(126, -8), "levels/col10.txt", false, glm::ivec2(0, 120));
 		}
+		else if (posPlayer.x <= 5 && posPlayer.y == 56)
+			Scene::instance().setLevel("levels/prince-map11.txt", glm::vec2(313, 56), "levels/col11.txt", false, glm::ivec2(0, 120));
 	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map11.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == -8) {
+			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(313, -8), "levels/col12.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map12.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == -8) {
+			Scene::instance().setLevel("levels/prince-map13.txt", glm::vec2(313, -8), "levels/col13.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x <= 5 && posPlayer.y == 56)
+			Scene::instance().setLevel("levels/prince-map13.txt", glm::vec2(313, 56), "levels/col13.txt", false, glm::ivec2(0, 120));
+		else if (posPlayer.x >= 314 && posPlayer.y == -8)
+			Scene::instance().setLevel("levels/prince-map11.txt", glm::vec2(4, -8), "levels/col11.txt", false, glm::ivec2(0, 120));
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map13.txt") == 0){
+		if (posPlayer.x >= 314 && posPlayer.y == -8) {
+			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(4, -8), "levels/col12.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56)
+			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(4, 56), "levels/col12.txt", false, glm::ivec2(0, 120));
+	}
+}
 }
 
 void Player::change_level_fast(){
@@ -886,6 +910,12 @@ void Player::change_level_fast(){
 		face_direction = true;
 		Scene::instance().isEnemyVisible(false);
 		//Game::instance().game_finished = true;
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_F11)){
+		Scene::instance().setLevel("levels/prince-map11.txt", glm::vec2(313, 56), "levels/col11.txt", false, glm::ivec2(0, 120));
+		sprite->changeAnimation(STAND_LEFT);
+		face_direction = false;
+		Scene::instance().isEnemyVisible(false);
 	}
 }
 

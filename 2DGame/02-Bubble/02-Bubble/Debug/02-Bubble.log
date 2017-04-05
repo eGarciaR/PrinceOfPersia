@@ -1,59 +1,19 @@
-﻿Build started 05/04/2017 9:07:52.
-     1>Project "F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" on node 2 (Build target(s)).
+﻿Compilación iniciada a las 05/04/2017 13:00:34.
+     1>Proyecto "C:\Users\eric\Desktop\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" en el nodo 2 (Build destinos).
      1>ClCompile:
-         C:\Archivos de programa\Microsoft Visual Studio 2013 Professional\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Door.cpp Enemy.cpp Game.cpp Life.cpp main.cpp Player.cpp Scene.cpp TileMap.cpp Torch.cpp
-         Torch.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         TileMap.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         Scene.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(52): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(79): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(101): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.cpp(165): warning C4018: '<' : signed/unsigned mismatch
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
          Player.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(713): warning C4018: '<' : signed/unsigned mismatch
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(791): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(792): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(903): warning C4018: '<' : signed/unsigned mismatch
-         Life.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         Door.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         Generating Code...
-         Compiling...
-         main.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         Game.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-         Enemy.cpp
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\enemy.cpp(78): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
-     1>f:\windows\vj\princeofpersia\2dgame\02-bubble\02-bubble\enemy.cpp(79): warning C4244: '+=' : conversion from 'float' to 'int', possible loss of data
-         Generating Code...
-       Link:
-         C:\Archivos de programa\Microsoft Visual Studio 2013 Professional\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.exe" /INCREMENTAL /NOLOGO /LIBPATH:"..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug" /LIBPATH:..\..\..\libs\freeglut\lib /LIBPATH:"..\..\..\libs\glew-1.13.0\lib\Release\Win32" SOIL.lib glew32.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.lib" /MACHINE:X86 Debug\Door.obj
-         Debug\Enemy.obj
-         Debug\Game.obj
-         Debug\Life.obj
-         Debug\main.obj
-         Debug\Player.obj
-         Debug\Scene.obj
-         Debug\Shader.obj
-         Debug\ShaderProgram.obj
-         Debug\Sprite.obj
-         Debug\Texture.obj
-         Debug\TileMap.obj
-         Debug\Torch.obj
-     1>SOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_DXT.obj)' or at 'F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\vc100.pdb'; linking object as if no debug info
-     1>SOIL.lib(image_helper.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(image_helper.obj)' or at 'F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\vc100.pdb'; linking object as if no debug info
-     1>SOIL.lib(SOIL.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(SOIL.obj)' or at 'F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\vc100.pdb'; linking object as if no debug info
-     1>SOIL.lib(stb_image_aug.obj) : warning LNK4099: PDB 'vc100.pdb' was not found with 'SOIL.lib(stb_image_aug.obj)' or at 'F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\vc100.pdb'; linking object as if no debug info
-         02-Bubble.vcxproj -> F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.exe
-     1>Done Building Project "F:\windows\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" (Build target(s)).
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\scene.h(10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(713): warning C4018: '<' : no coinciden signed/unsigned
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(791): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(792): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(881): error C2059: error de sintaxis : '}'
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(881): error C2143: error de sintaxis : falta ';' delante de '}'
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(883): error C2143: error de sintaxis : falta ';' delante de '{'
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(883): error C2447: '{' : falta el encabezado de función (¿lista formal de estilo anterior?)
+     1>c:\users\eric\desktop\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(933): warning C4018: '<' : no coinciden signed/unsigned
+     1>Compilación del proyecto terminada "C:\Users\eric\Desktop\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" (Build destinos) -- ERROR.
 
-Build succeeded.
+ERROR al compilar.
 
-Time Elapsed 00:00:13.76
+Tiempo transcurrido 00:00:00.56
