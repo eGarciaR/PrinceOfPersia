@@ -244,16 +244,15 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.9f));
 		sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 0));
 	}
-	for (float i = 4; i < 6; ++i) {
-		sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.9f));
-		sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 0));
-	}
+
+	sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (5.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (6.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (7.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (8.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_RIGHT, glm::vec2(0.0f + (9.0f / 20.0f), 0.9f));
-	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 0));
-	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 0));
+	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, -1));
+	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(4, 0));
+	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 1));
 	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 0));
 	sprite->setSpeed(LONG_JUMP_RIGHT, glm::vec2(2, 0));
 
@@ -262,16 +261,15 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.9f));
 		sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 0));
 	}
-	for (float i = 15; i > 13; --i) {
-		sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.9f));
-		sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 0));
-	}
+
+	sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (14.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (13.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (12.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (11.0f / 20.0f), 0.9f));
 	sprite->addKeyframe(LONG_JUMP_LEFT, glm::vec2(0.0f + (10.0f / 20.0f), 0.9f));
-	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 0));
-	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 0));
+	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, -1));
+	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-4, 0));
+	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 1));
 	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 0));
 	sprite->setSpeed(LONG_JUMP_LEFT, glm::vec2(-2, 0));
 
@@ -877,7 +875,6 @@ void Player::change_level(){
 		else if (posPlayer.x >= 314 && posPlayer.y == 56)
 			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(4, 56), "levels/col12.txt", false, glm::ivec2(0, 120));
 	}
-}
 }
 
 void Player::change_level_fast(){
