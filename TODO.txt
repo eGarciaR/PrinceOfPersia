@@ -1,8 +1,9 @@
 -vidas
 -corregir musica step + collision_wall
 - vayas con movimiento
-- enemigo
+- enemigo IA
 - cambiar diseño tile 10
+- collision right/left en salto largo
 
 
 -musica - DONE!
