@@ -73,7 +73,6 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	if (!game_over){
 		player->update(deltaTime, texProgram);
 		if (enemyVisible) enemy->update(deltaTime, player->getPosition());
 		for (int i = 0; i < antorchas_pos.size(); ++i) {
@@ -83,7 +82,6 @@ void Scene::update(int deltaTime)
 
 		}
 		if (door_pos.size() >= 1) (&doors[0])->update(deltaTime);
-	}
 }
 
 void Scene::render()
@@ -97,7 +95,6 @@ void Scene::render()
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 	map->render();
-	if (!game_over){
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 		if (door_pos.size() >= 1) (&doors[0])->render();
 		player->render();
@@ -112,7 +109,6 @@ void Scene::render()
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		col->render();
 		life->render();
-	}
 }
 
 void Scene::initShaders()
@@ -226,10 +222,7 @@ void Scene::stop_music(){
 
 void Scene::set_game_over(){
 	game_over = true;
-	initShaders();
-	map = TileMap::createTileMap("levels/game_over.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT -9), 0.f);
-	currentTime = 0.0f;
+	changeHealthAnimation(4);
 	stop_music();
 	play_music("game_over.wav", true);
 
@@ -237,7 +230,7 @@ void Scene::set_game_over(){
 
 void Scene::restart_game(){
 	stop_music();
-	play_music("PoP_music.wav", true);
+	//play_music("PoP_music.wav", true);
 	game_over = false;
 	init();
 }
