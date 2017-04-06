@@ -802,20 +802,50 @@ void Player::update(int deltaTime, ShaderProgram &program)
 									distancia -= 10;
 									if (face_direction){
 										if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, true)) {
-											climbing = true;
-											bJumping = false;
-											int posX = posPlayer.x % 32;
-											if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
-											else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+											glm::ivec2 posAux = glm::ivec2(posPlayer.x, posPlayer.y - 64);
+											if (map->collisionDoor(posAux, glm::ivec2(24, 64), true)){
+												if (!Scene::instance().isDoorOpened()){
+													sprite->changeAnimation(STAND_RIGHT);
+												}
+												else {
+													climbing = true;
+													bJumping = false;
+													int posX = posPlayer.x % 32;
+													if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+													else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+												}
+											}
+											else {
+												climbing = true;
+												bJumping = false;
+												int posX = posPlayer.x % 32;
+												if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+												else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+											}
 										}
 									}
 									else{
 										if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, false)) {
-											climbing = true;
-											bJumping = false;
-											int posX = (posPlayer.x % 32);
-											if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
-											else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+											glm::ivec2 posAux = glm::ivec2(posPlayer.x, posPlayer.y - 64);
+											if (map->collisionDoor(posAux, glm::ivec2(24, 64), false)){
+												if (!Scene::instance().isDoorOpened()){
+													sprite->changeAnimation(STAND_LEFT);
+												}
+												else {
+													climbing = true;
+													bJumping = false;
+													int posX = (posPlayer.x % 32);
+													if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+													else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+												}
+											}
+											else {
+												climbing = true;
+												bJumping = false;
+												int posX = (posPlayer.x % 32);
+												if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+												else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+											}
 										}
 									}
 								}
