@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="11" height="3" tilewidth="32" tileheight="64" nextobjectid="1">
+ <tileset firstgid="1" name="mapa2" tilewidth="64" tileheight="64" tilecount="25" columns="5">
+  <image source="2DGame/02-Bubble/02-Bubble/images/mapa2.png" width="320" height="320"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="11" height="3">
+  <data encoding="csv">
+0,11,11,19,11,11,19,11,11,19,11,
+5,5,5,5,5,5,5,6,15,5,5,
+13,2,13,2,13,2,13,2,13,2,13
+</data>
+ </layer>
+</map>
