@@ -7,9 +7,10 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Torch.h"
-#include "Life.h";
+#include "Life.h"
 #include "Door.h"
 #include "Enemy.h"
+#include "Intro.h"
 #include <windows.h> 
 #include <conio.h>
 #include <stdio.h>
@@ -51,7 +52,8 @@ public:
 	void openDoor();
 	bool isDoorOpened();
 	void changeHealthAnimation(int hp);
-
+	float getCurrentTime();
+	bool fin_intro;
 private:
 	void initShaders();
 
@@ -60,6 +62,7 @@ private:
 	Player *player;
 	Enemy *enemy;
 	Life *life;
+	Intro *intro;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;

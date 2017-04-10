@@ -37,11 +37,15 @@ void Scene::init()
 	enemyVisible = false;
 	game_over = false;
 	doorOpened = false;
+	fin_intro = false;
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	col = TileMap::createTileMap("levels/col1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	enemy = new Enemy();
+	intro = new Intro();
+	intro->init(glm::ivec2(SCREEN_X-1, SCREEN_Y), texProgram);
+	intro->setPosition(glm::ivec2(1 * map->getTileSize(), 0));
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
@@ -61,7 +65,7 @@ void Scene::init()
 	if (door_pos.size() >= 1) {
 		Door *door = new Door();
 		door->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		door->setPosition(glm::vec2((((door_pos[0].x) * map->getTileSize()) + 12), ((door_pos[0].y) * map->getTileSize()) + 0));
+		door->setPosition(glm::vec2((((door_pos[0].x) * map->getTileSize()) + 12), ((door_pos[0].y) * map->getTileSize())-6));
 		door->setTileMap(map);
 		doors.push_back(*door);
 	}
@@ -73,6 +77,8 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+	//printf("%f\n", currentTime);
+	if (fin_intro){
 		player->update(deltaTime, texProgram);
 		if (enemyVisible) enemy->update(deltaTime, player->getPosition());
 		for (int i = 0; i < antorchas_pos.size(); ++i) {
@@ -82,19 +88,21 @@ void Scene::update(int deltaTime)
 
 		}
 		if (door_pos.size() >= 1) (&doors[0])->update(deltaTime);
+	}
+	else intro->update(deltaTime, 1*map->getTileSize(), 0);
 }
 
 void Scene::render()
 {
 	glm::mat4 modelview;
-
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	map->render();
+	if (fin_intro){
+		map->render();
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 		if (door_pos.size() >= 1) (&doors[0])->render();
 		player->render();
@@ -109,6 +117,8 @@ void Scene::render()
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		col->render();
 		life->render();
+	}
+	else intro->render();
 }
 
 void Scene::initShaders()
@@ -168,7 +178,8 @@ void Scene::setLevel(string s, glm::vec2 &pos, string column, bool showEnemy, gl
 	if (door_pos.size() >= 1) {
 		Door *door = new Door();
 		door->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-		door->setPosition(glm::vec2(door_pos[0].x * map->getTileSize()+12, door_pos[0].y * map->getTileSize()));
+		if(door_pos[0].y != 0) door->setPosition(glm::vec2(door_pos[0].x * map->getTileSize()+12, door_pos[0].y * map->getTileSize()+24));
+		else door->setPosition(glm::vec2(door_pos[0].x * map->getTileSize()+12, door_pos[0].y * map->getTileSize()-6));
 		door->setTileMap(map);
 		doors.push_back(*door);
 	}
@@ -237,4 +248,8 @@ void Scene::restart_game(){
 
 void Scene::isEnemyVisible(bool visible) {
 	enemyVisible = visible;
+}
+
+float Scene::getCurrentTime(){
+	return currentTime;
 }

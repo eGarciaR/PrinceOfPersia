@@ -5,4 +5,4 @@ images/Tiles-mapa.png					--Tilesheet
 5 5							--Number of tiles in tilesheet
 3 1 129 119 175 5 7 5 
 3 1 4 9 119 176 6 5 1 
-133 5 5 5 8 1 12132 13
+133 5 23248 1 12132 13

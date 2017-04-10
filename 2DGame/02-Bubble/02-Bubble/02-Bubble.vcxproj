@@ -15,6 +15,7 @@
     <ClInclude Include="Door.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Intro.h" />
     <ClInclude Include="Life.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
@@ -30,6 +31,7 @@
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Intro.cpp" />
     <ClCompile Include="Life.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
