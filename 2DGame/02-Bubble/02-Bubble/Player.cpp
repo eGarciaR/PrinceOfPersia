@@ -357,6 +357,7 @@ void Player::update(int deltaTime, ShaderProgram &program)
 					music_step = true;
 				}
 			}
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64))) sprite->changeAnimation(STAND_LEFT);
 		}
 		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
 			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STOP_RIGHT) {
@@ -385,7 +386,8 @@ void Player::update(int deltaTime, ShaderProgram &program)
 					sprite->changeAnimation(STAND_LEFT);
 				}
 			}
-			if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT && sprite->animation() != MOVE_TO_LEFT_RUNNING) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
+			//if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT && sprite->animation() != MOVE_TO_LEFT_RUNNING) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
+			if (sprite->animation() == STAND_LEFT){
 				if (Game::instance().getSpecialKey(SHIFT)) {
 					sprite->changeAnimation(MOVE_STEP_LEFT);
 				}
@@ -442,6 +444,7 @@ void Player::update(int deltaTime, ShaderProgram &program)
 					music_step = true;
 				}
 			}
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(38, 64))) sprite->changeAnimation(STAND_RIGHT);
 		}
 		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT )
 		{
@@ -1028,7 +1031,8 @@ void Player::change_level(){
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map1.txt") == 0){
 		if (posPlayer.x <=5 && posPlayer.y == 56) {
-			Scene::instance().setLevel("levels/prince-map6.txt", glm::vec2(313, 56), "levels/col6.txt", false, glm::ivec2(10, 56));
+			Scene::instance().setLevel("levels/palace-map5.txt", glm::vec2(313, 56), "levels/map2-col5.txt", false, glm::ivec2(10, 56));
+			level == 1;
 		}
 		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
 			Scene::instance().setLevel("levels/palace-map2.txt", glm::vec2(6, 56), "levels/map2-col2.txt", false, glm::ivec2(10, 56));
@@ -1042,69 +1046,204 @@ void Player::change_level(){
 			Scene::instance().setLevel("levels/palace-map3.txt", glm::vec2(6, 56), "levels/map2-col3.txt", false, glm::ivec2(10, 56));
 		}
 	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map3.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map2.txt", glm::vec2(313, 56), "levels/map2-col2.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map4.txt", glm::vec2(6, 56), "levels/map2-col4.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map4.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map3.txt", glm::vec2(313, 56), "levels/map2-col3.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map9.txt", glm::vec2(6, 56), "levels/map2-col9.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map5.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map6.txt", glm::vec2(313, 56), "levels/map2-col6.txt", false, glm::ivec2(10, 56));
+			level == 1;
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map1.txt", glm::vec2(6, 56), "levels/map2-col1.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map9.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map4.txt", glm::vec2(313, 56), "levels/map2-col4.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map10.txt", glm::vec2(6, 56), "levels/map2-col10.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map10.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map9.txt", glm::vec2(313, 56), "levels/map2-col9.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map11.txt", glm::vec2(6, 56), "levels/map2-col11.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map11.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map10.txt", glm::vec2(313, 56), "levels/map2-col10.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map12.txt", glm::vec2(6, 56), "levels/map2-col12.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == -8) {
+			Scene::instance().setLevel("levels/palace-map12.txt", glm::vec2(6, -8), "levels/map2-col12.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map6.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map7.txt", glm::vec2(313, 56), "levels/map2-col7.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map5.txt", glm::vec2(6, 56), "levels/map2-col5.txt", false, glm::ivec2(10, 56));
+		}
+	}
+	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/palace-map7.txt") == 0){
+		if (posPlayer.x <= 5 && posPlayer.y == -8) {
+			Scene::instance().setLevel("levels/palace-map8.txt", glm::vec2(313, -8), "levels/map2-col8.txt", false, glm::ivec2(10, 56));
+		}
+		else if (posPlayer.x >= 314 && posPlayer.y == 56) {
+			Scene::instance().setLevel("levels/palace-map6.txt", glm::vec2(6, 56), "levels/map2-col6.txt", false, glm::ivec2(10, 56));
+		}
+	}
 
 }
 
 void Player::change_level_fast(){
 	if (Game::instance().getSpecialKey(GLUT_KEY_F1)){
-		Scene::instance().setLevel("levels/prince-map1.txt", glm::vec2(64, 0), "levels/col1.txt", false, glm::ivec2(0, 120));
+		if(level == 1) Scene::instance().setLevel("levels/prince-map1.txt", glm::vec2(64, 0), "levels/col1.txt", false, glm::ivec2(0, 120));
+		else Scene::instance().setLevel("levels/palace-map1.txt", glm::vec2(6, 56), "levels/map2-col1.txt", false, glm::ivec2(10, 56));
 		sprite->changeAnimation(STAND_RIGHT);
 		face_direction = true;
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F3)){
-		Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, 0), "levels/col3.txt", false, glm::ivec2(0, 120));
+		if(level == 1) Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, 0), "levels/col3.txt", false, glm::ivec2(0, 120));
+		else Scene::instance().setLevel("levels/palace-map3.txt", glm::vec2(6, 56), "levels/map2-col3.txt", false, glm::ivec2(10, 56));
 		sprite->changeAnimation(STAND_RIGHT);
 		face_direction = true;
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F4)){
-		Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(6, 56), "levels/col4.txt", true, glm::ivec2(250, 56));
+		if(level == 1) Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(6, 56), "levels/col4.txt", true, glm::ivec2(250, 56));
+		else Scene::instance().setLevel("levels/palace-map4.txt", glm::vec2(6, 56), "levels/map2-col4.txt", false, glm::ivec2(250, 56));
 		sprite->changeAnimation(STAND_RIGHT);
 		face_direction = true;
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F5)){
-		Scene::instance().setLevel("levels/prince-map5.txt", glm::vec2(313, -8), "levels/col5.txt", false, glm::ivec2(0, 120));
-		sprite->changeAnimation(STAND_LEFT);
-		face_direction = false;
+		if (level == 1) {
+			Scene::instance().setLevel("levels/prince-map5.txt", glm::vec2(313, -8), "levels/col5.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else {
+			Scene::instance().setLevel("levels/palace-map5.txt", glm::vec2(12, 56), "levels/map2-col5.txt", false, glm::ivec2(250, 56));
+			sprite->changeAnimation(STAND_RIGHT);
+			face_direction = true;
+		}
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F6)){
-		Scene::instance().setLevel("levels/prince-map6.txt", glm::vec2(6, 56), "levels/col6.txt", false, glm::ivec2(0, 120));
+		if(level == 1) Scene::instance().setLevel("levels/prince-map6.txt", glm::vec2(6, 56), "levels/col6.txt", false, glm::ivec2(0, 120));
+		else Scene::instance().setLevel("levels/palace-map6.txt", glm::vec2(6, 56), "levels/map2-col6.txt", false, glm::ivec2(0, 120));
 		sprite->changeAnimation(STAND_RIGHT);
 		face_direction = true;
 		Scene::instance().isEnemyVisible(false);
-		//Game::instance().game_finished = true;
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F7)){
-		Scene::instance().setLevel("levels/prince-map7.txt", glm::vec2(311, -8), "levels/col7.txt", false, glm::ivec2(0, 120));
-		sprite->changeAnimation(STAND_LEFT);
-		face_direction = false;
+		if (level == 1) {
+			Scene::instance().setLevel("levels/prince-map7.txt", glm::vec2(311, -8), "levels/col7.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else {
+			Scene::instance().setLevel("levels/palace-map7.txt", glm::vec2(311, 56), "levels/map2-col7.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F8)){
-		Scene::instance().setLevel("levels/prince-map8.txt", glm::vec2(311, -8), "levels/col8.txt", false, glm::ivec2(0, 120));
-		sprite->changeAnimation(STAND_LEFT);
-		face_direction = false;
+		if (level == 1) {
+			Scene::instance().setLevel("levels/prince-map8.txt", glm::vec2(311, -8), "levels/col8.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else {
+			Scene::instance().setLevel("levels/palace-map8.txt", glm::vec2(313, -8), "levels/map2-col8.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F9)){
-		Scene::instance().setLevel("levels/prince-map11.txt", glm::vec2(311, 56), "levels/col11.txt", false, glm::ivec2(0, 120));
-		sprite->changeAnimation(STAND_LEFT);
-		face_direction = false;
+		if (level == 1) {
+			Scene::instance().setLevel("levels/prince-map11.txt", glm::vec2(311, 56), "levels/col11.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else {
+			Scene::instance().setLevel("levels/palace-map9.txt", glm::vec2(6, 56), "levels/map2-col9.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_RIGHT);
+			face_direction = true;
+		}
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F2)){
-		Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(311, -8), "levels/col12.txt", false, glm::ivec2(0, 120));
-		sprite->changeAnimation(STAND_LEFT);
-		face_direction = false;
+		if (level == 1){
+			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(311, -8), "levels/col12.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else{
+			Scene::instance().setLevel("levels/palace-map2.txt", glm::vec2(6, 56), "levels/map2-col2.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_RIGHT);
+			face_direction = true;
+		}
 		Scene::instance().isEnemyVisible(false);
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_F11)){
-		if(!sword) Scene::instance().setLevel("levels/prince-map13.txt", glm::vec2(311, 56), "levels/col13.txt", false, glm::ivec2(0, 120));
-		else Scene::instance().setLevel("levels/prince-map14.txt", glm::vec2(311, 56), "levels/col13.txt", false, glm::ivec2(0, 120));
-		sprite->changeAnimation(STAND_LEFT);
-		face_direction = false;
+		if (level == 1){
+			if (!sword) Scene::instance().setLevel("levels/prince-map13.txt", glm::vec2(311, 56), "levels/col13.txt", false, glm::ivec2(0, 120));
+			else Scene::instance().setLevel("levels/prince-map14.txt", glm::vec2(311, 56), "levels/col13.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else{
+			Scene::instance().setLevel("levels/palace-map11.txt", glm::vec2(311, -8), "levels/map2-col11.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		Scene::instance().isEnemyVisible(false);
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_HOME)){
+		if (level == 1){
+			Scene::instance().setLevel("levels/prince-map10.txt", glm::vec2(311, -8), "levels/col10.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_LEFT);
+			face_direction = false;
+		}
+		else{
+			Scene::instance().setLevel("levels/palace-map10.txt", glm::vec2(6, 56), "levels/map2-col10.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_RIGHT);
+			face_direction = true;
+		}
+		Scene::instance().isEnemyVisible(false);
+	}
+	else if (Game::instance().getSpecialKey(GLUT_KEY_END)){
+		if (level==2){ 
+			Scene::instance().setLevel("levels/palace-map12.txt", glm::vec2(6, 56), "levels/map2-col12.txt", false, glm::ivec2(0, 120));
+			sprite->changeAnimation(STAND_RIGHT);
+			face_direction = true;
+		}
 		Scene::instance().isEnemyVisible(false);
 	}
 }

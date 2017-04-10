@@ -31,6 +31,9 @@ void Game::keyPressed(int key)
 	else if (key > 0 && Scene::instance().game_over){
 		Scene::instance().restart_game();
 	}
+	else if (key > 0 && !Scene::instance().fin_intro){
+		Scene::instance().fin_intro = true;
+	}
 	keys[key] = true;
 }
 

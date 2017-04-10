@@ -244,6 +244,7 @@ void Scene::restart_game(){
 	//play_music("PoP_music.wav", true);
 	game_over = false;
 	init();
+	fin_intro = true;
 }
 
 void Scene::isEnemyVisible(bool visible) {
