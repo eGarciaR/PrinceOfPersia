@@ -40,6 +40,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	void setSpeed(int animId, const glm::vec2 &speed);
 	glm::vec2 getSpeed();
+	int getCurrentAnimation();
 
 private:
 	Texture *texture;

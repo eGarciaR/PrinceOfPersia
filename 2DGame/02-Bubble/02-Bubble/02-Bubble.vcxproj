@@ -17,6 +17,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Intro.h" />
     <ClInclude Include="Life.h" />
+    <ClInclude Include="LifeEnemy.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
@@ -33,6 +34,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Intro.cpp" />
     <ClCompile Include="Life.cpp" />
+    <ClCompile Include="LifeEnemy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />

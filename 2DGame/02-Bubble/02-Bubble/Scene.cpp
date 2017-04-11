@@ -44,6 +44,7 @@ void Scene::init()
 	player = new Player();
 	enemy = new Enemy();
 	intro = new Intro();
+	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	intro->init(glm::ivec2(SCREEN_X-1, SCREEN_Y), texProgram);
 	intro->setPosition(glm::ivec2(1 * map->getTileSize(), 0));
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -52,6 +53,8 @@ void Scene::init()
 	
 	life = new Life();
 	life->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	lifeEnemy = new LifeEnemy();
+	lifeEnemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	//Antorchas
 	for (int i = 0; i < antorchas_pos.size(); ++i) {
 		Torch *torch = new Torch();
@@ -77,10 +80,11 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	//printf("%f\n", currentTime);
 	if (fin_intro){
 		player->update(deltaTime, texProgram);
-		if (enemyVisible) enemy->update(deltaTime, player->getPosition());
+		if (enemyVisible) {
+			enemy->update(deltaTime, player->getPosition());
+		}
 		for (int i = 0; i < antorchas_pos.size(); ++i) {
 			if (antorchas_pos[i].y == 0) antorchas_pos[i].y = -1;
 			else if (antorchas_pos[i].y == 2) antorchas_pos[i].y = 3;
@@ -117,6 +121,7 @@ void Scene::render()
 		texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
 		col->render();
 		life->render();
+		if (enemyVisible) lifeEnemy->render();
 	}
 	else intro->render();
 }
@@ -163,7 +168,6 @@ void Scene::setLevel(string s, glm::vec2 &pos, string column, bool showEnemy, gl
 	player->setPosition(glm::vec2(pos.x, pos.y));
 	player->setTileMap(map);
 	if (showEnemy) {
-		enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 		enemy->setPosition(glm::ivec2(posEnemy.x, posEnemy.y));
 		enemy->setTileMap(map);
 		enemyVisible = true;
@@ -222,6 +226,9 @@ void Scene::changeHealthAnimation(int hp){
 	life->changeAnimation(hp);
 }
 
+void Scene::changeHealthEnemyAnimation(int hp){
+	lifeEnemy->changeAnimation(hp);
+}
 void Scene::play_music(char *s, bool loop){
 	if(loop) PlaySoundA(LPCSTR(s), NULL, SND_FILENAME | SND_LOOP | SND_ASYNC);
 	else PlaySoundA(LPCSTR(s), NULL, SND_FILENAME | SND_ASYNC);
@@ -251,6 +258,45 @@ void Scene::isEnemyVisible(bool visible) {
 	enemyVisible = visible;
 }
 
+bool Scene::getEnemyVisible(){
+	return enemyVisible;
+}
+void Scene::setEnemyCreated(bool created){
+	enemy->setEnemyCreated(created);
+}
+
+bool Scene::isEnemyCreated(){
+	return enemy->isEnemyCreated();
+}
 float Scene::getCurrentTime(){
 	return currentTime;
+}
+
+glm::ivec2 Scene::getEnemyPosition(){
+	return enemy->getEnemyPosition();
+}
+
+glm::ivec2 Scene::getPlayerPosition(){
+	return player->getPosition();
+}
+void Scene::setEnemyPosition(glm::ivec2 pos){
+	enemy->setEnemyPositon(pos);
+}
+
+int Scene::getPlayerAnimation(){
+	return player->getPlayerAnimation();
+}
+
+void Scene::PlayerDamaged(){
+	player->PlayerDamaged();
+}
+
+bool Scene::PlayerDied(){
+	if(0 == player->getPlayerHp()) return true;
+	return false;
+}
+
+bool Scene::EnemyDied(){
+	if (0 == enemy->getEnemyHp()) return true;
+	return false;
 }

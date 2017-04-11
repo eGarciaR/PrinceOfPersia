@@ -10,6 +10,7 @@
 #define JUMP_HEIGHT 16
 #define FALL_STEP 2
 #define SHIFT 112
+#define KEY_SPACE 32
 
 enum PlayerAnims
 {
@@ -17,7 +18,8 @@ enum PlayerAnims
 	START_FALL_LEFT, MOVE_TO_LEFT, MOVE_TO_RIGHT, MOVE_TO_LEFT_RUNNING, MOVE_TO_RIGHT_RUNNING, START_JUMP_RIGHT, JUMP_RIGHT, JUMP_FALL_RIGHT,
 	JUMP_LEFT, START_JUMP_LEFT, JUMP_FALL_LEFT, MOVE_STEP_LEFT, MOVE_STEP_RIGHT, CLIMB_RIGHT, CLIMB_LEFT, LONG_JUMP_RIGHT, LONG_JUMP_LEFT,
 	FALL_DOWN_RIGHT, FALL_DOWN_LEFT, STAND_UP_RIGHT, STAND_UP_LEFT, AGACHADO_RIGHT, AGACHADO_LEFT, DIED_RIGHT, DIED_LEFT, DIED_FALL_RIGHT, DIED_FALL_LEFT,
-	FALLING_LEFT, FALLING_RIGHT, DIED_FINISH_RIGHT, DIED_FINISH_LEFT, GET_SWORD_RIGHT, GET_SWORD_LEFT
+	FALLING_LEFT, FALLING_RIGHT, DIED_FINISH_RIGHT, DIED_FINISH_LEFT, GET_SWORD_RIGHT, GET_SWORD_LEFT, SHOW_SWORD_RIGHT, SHOW_SWORD_LEFT, ATACK_RIGHT,
+	ATACK_LEFT, STAND_FIGHT_RIGHT, STAND_FIGHT_LEFT, MOVE_FIGHT_RIGHT, MOVE_FIGHT_LEFT, BLOCK_RIGHT, BLOCK_LEFT, HIDE_SWORD
 };
 
 
@@ -27,6 +29,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	climbing = false;
 	agachado = false;
 	sword = false;
+	fighting = false;
 	music_collision_over = false;
 	music_collision = false;
 	face_direction = true;
@@ -35,7 +38,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	hp = 3;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.05, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(44);
+	sprite->setNumberAnimations(55);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -333,7 +336,73 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(GET_SWORD_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.95f));
 		sprite->setSpeed(GET_SWORD_LEFT, glm::vec2(0, 0));
 	}
-		
+	
+	sprite->setAnimationSpeed(SHOW_SWORD_RIGHT, 8);
+	for (float i = 1; i <= 5; ++i){
+		sprite->addKeyframe(SHOW_SWORD_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.1f));
+		sprite->setSpeed(SHOW_SWORD_RIGHT, glm::vec2(0, 0));
+	}
+
+	sprite->setAnimationSpeed(SHOW_SWORD_LEFT, 8);
+	for (float i = 18; i >= 14; --i){
+		sprite->addKeyframe(SHOW_SWORD_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.1f));
+		sprite->setSpeed(SHOW_SWORD_LEFT, glm::vec2(0, 0));
+	}
+
+	sprite->setAnimationSpeed(HIDE_SWORD, 8);
+	for (float i = 5; i >= 1; --i){
+		sprite->addKeyframe(HIDE_SWORD, glm::vec2(0.0f + (i / 20.0f), 0.1f));
+		sprite->setSpeed(HIDE_SWORD, glm::vec2(0, 0));
+	}
+
+	sprite->setAnimationSpeed(ATACK_RIGHT, 8);
+	for (float i = 0; i <= 7; ++i){
+		sprite->addKeyframe(ATACK_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.45f));
+		sprite->setSpeed(ATACK_RIGHT, glm::vec2(0, 0));
+	}
+
+	sprite->setAnimationSpeed(ATACK_LEFT, 8);
+	for (float i = 19; i >= 12; --i){
+		sprite->addKeyframe(ATACK_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.45f));
+		sprite->setSpeed(ATACK_LEFT, glm::vec2(0, 0));
+	}
+
+	sprite->setAnimationSpeed(STAND_FIGHT_RIGHT, 8);
+	sprite->addKeyframe(STAND_FIGHT_RIGHT, glm::vec2(0.05f, 0.45f));
+	sprite->setSpeed(STAND_FIGHT_RIGHT, glm::vec2(0, 0));
+
+	sprite->setAnimationSpeed(STAND_FIGHT_LEFT, 8);
+	sprite->addKeyframe(STAND_FIGHT_LEFT, glm::vec2(0.90f, 0.45f));
+	sprite->setSpeed(STAND_FIGHT_LEFT, glm::vec2(0, 0));
+
+	sprite->setAnimationSpeed(MOVE_FIGHT_RIGHT, 8);
+	sprite->addKeyframe(MOVE_FIGHT_RIGHT, glm::vec2(0.0f, 0.45f));
+	sprite->addKeyframe(MOVE_FIGHT_RIGHT, glm::vec2(0.05f, 0.45f));
+	sprite->setSpeed(MOVE_FIGHT_RIGHT, glm::vec2(1, 0));
+	sprite->setSpeed(MOVE_FIGHT_RIGHT, glm::vec2(0, 0));
+
+	sprite->setAnimationSpeed(MOVE_FIGHT_LEFT, 8);
+	sprite->addKeyframe(MOVE_FIGHT_LEFT, glm::vec2(0.0f, 0.45f));
+	sprite->addKeyframe(MOVE_FIGHT_LEFT, glm::vec2(0.05f, 0.45f));
+	sprite->setSpeed(MOVE_FIGHT_LEFT, glm::vec2(-1, 0));
+	sprite->setSpeed(MOVE_FIGHT_LEFT, glm::vec2(0, 0));
+
+	sprite->setAnimationSpeed(BLOCK_RIGHT, 8);
+	for (int i = 2; i <= 6; ++i){
+		sprite->addKeyframe(BLOCK_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.3f));
+		sprite->setSpeed(BLOCK_RIGHT, glm::vec2(0, 0));
+	}
+	sprite->addKeyframe(BLOCK_RIGHT, glm::vec2((6 / 20.0f), 0.3f));
+	sprite->setSpeed(BLOCK_RIGHT, glm::vec2(0, 0));
+
+	sprite->setAnimationSpeed(BLOCK_LEFT, 8);
+	for (int i = 17; i >= 13; --i){
+		sprite->addKeyframe(BLOCK_LEFT, glm::vec2(0.0f + (i / 20.0f), 0.3f));
+		sprite->setSpeed(BLOCK_LEFT, glm::vec2(0, 0));
+	}
+	sprite->addKeyframe(BLOCK_LEFT, glm::vec2((13 / 20.0f), 0.3f));
+	sprite->setSpeed(BLOCK_LEFT, glm::vec2(0, 0));
+
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + 64), float(tileMapDispl.y + 0)));
@@ -346,6 +415,10 @@ void Player::update(int deltaTime, ShaderProgram &program)
 	change_level_fast();
 	change_level();
 	trapsManagement(program);
+	if (Scene::instance().EnemyDied() && fighting){
+		fighting = false;
+		sprite->changeAnimation(HIDE_SWORD);
+	}
 	if (Game::instance().getSpecialKey(GLUT_KEY_LEFT) && !Scene::instance().game_over)
 	{
 		if (sprite->animation() == LONG_JUMP_LEFT) {
@@ -359,7 +432,9 @@ void Player::update(int deltaTime, ShaderProgram &program)
 			}
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64))) sprite->changeAnimation(STAND_LEFT);
 		}
-		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
+		if (sprite->animation() == STOP_LEFT && map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64)))sprite->changeAnimation(STAND_LEFT);
+		if (fighting && sprite->animation() != ATACK_LEFT) sprite->changeAnimation(MOVE_FIGHT_LEFT);
+		if (!bJumping && !climbing && !fighting && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT){
 			if (sprite->animation() == MOVE_RIGHT || sprite->animation() == STOP_RIGHT) {
 				sprite->changeAnimation(MOVE_TO_LEFT_RUNNING);
 				face_direction = false;
@@ -446,7 +521,8 @@ void Player::update(int deltaTime, ShaderProgram &program)
 			}
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(38, 64))) sprite->changeAnimation(STAND_RIGHT);
 		}
-		if (!bJumping && !climbing && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT )
+		if (fighting && !sprite->animation() != ATACK_RIGHT) sprite->changeAnimation(MOVE_FIGHT_RIGHT);
+		if (!bJumping && !climbing && !fighting && distancia == 0 && sprite->animation() != FALL_RIGHT  && sprite->animation() != FALL_LEFT && sprite->animation() != LONG_JUMP_RIGHT && sprite->animation() != LONG_JUMP_LEFT )
 		{
 			if (sprite->animation() == MOVE_LEFT || sprite->animation() == STOP_LEFT) {
 				sprite->changeAnimation(MOVE_TO_RIGHT_RUNNING);
@@ -529,6 +605,11 @@ void Player::update(int deltaTime, ShaderProgram &program)
 			else sprite->changeAnimation(FALL_DOWN_LEFT);
 		}
 	}
+	else if (Game::instance().getSpecialKey(SHIFT) && Scene::instance().getEnemyVisible() && fighting && sword){
+		if (face_direction) sprite->changeAnimation(ATACK_RIGHT);
+		else sprite->changeAnimation(ATACK_LEFT);
+
+	}
 	else
 	{
 		music_collision = false;
@@ -536,8 +617,42 @@ void Player::update(int deltaTime, ShaderProgram &program)
 			Scene::instance().stop_music();
 			music_step = false;
 		}
+		if (sprite->animation() == STOP_RIGHT && map->collisionMoveRight(posPlayer, glm::ivec2(38, 64))) sprite->changeAnimation(STAND_RIGHT);
+		if (sprite->animation() == STOP_LEFT && map->collisionMoveLeft(posPlayer, glm::ivec2(24, 64))) sprite->changeAnimation(STAND_LEFT);
 		if (sprite->animation() == MOVE_LEFT) {
 			sprite->changeAnimation(STOP_LEFT);
+		}
+		else if (sprite->animation() == SHOW_SWORD_RIGHT) {
+			if (sprite->checkChangeAnimation(SHOW_SWORD_RIGHT))
+				sprite->changeAnimation(STAND_FIGHT_RIGHT);
+		}
+		else if (sprite->animation() == SHOW_SWORD_LEFT) {
+			if (sprite->checkChangeAnimation(SHOW_SWORD_LEFT))
+				sprite->changeAnimation(STAND_FIGHT_LEFT);
+		}
+		else if (sprite->animation() == ATACK_RIGHT) {
+			if (sprite->checkChangeAnimation(ATACK_RIGHT))
+				sprite->changeAnimation(STAND_FIGHT_RIGHT);
+		}
+		else if (sprite->animation() == ATACK_LEFT) {
+			if (sprite->checkChangeAnimation(ATACK_LEFT))
+				sprite->changeAnimation(STAND_FIGHT_LEFT);
+		}
+		else if (sprite->animation() == MOVE_FIGHT_RIGHT) {
+			if (sprite->checkChangeAnimation(MOVE_FIGHT_RIGHT))
+				sprite->changeAnimation(STAND_FIGHT_RIGHT);
+		}
+		else if (sprite->animation() == MOVE_FIGHT_LEFT) {
+			if (sprite->checkChangeAnimation(MOVE_FIGHT_LEFT))
+				sprite->changeAnimation(STAND_FIGHT_RIGHT);
+		}
+		else if (sprite->animation() == BLOCK_RIGHT) {
+			if (sprite->checkChangeAnimation(BLOCK_RIGHT))
+				sprite->changeAnimation(STAND_FIGHT_RIGHT);
+		}
+		else if (sprite->animation() == BLOCK_LEFT) {
+			if (sprite->checkChangeAnimation(BLOCK_LEFT))
+				sprite->changeAnimation(STAND_FIGHT_RIGHT);
 		}
 		else if (sprite->animation() == MOVE_RIGHT) {
 			sprite->changeAnimation(STOP_RIGHT);
@@ -700,6 +815,11 @@ void Player::update(int deltaTime, ShaderProgram &program)
 				sprite->changeAnimation(STAND_LEFT);
 			}
 		}
+		else if (sprite->animation() == HIDE_SWORD) {
+			if (sprite->checkChangeAnimation(HIDE_SWORD)) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+		}
 		else if (sprite->animation() == DIED_RIGHT || sprite->animation() == DIED_LEFT){
 			if(!Scene::instance().game_over) Scene::instance().set_game_over();
 		}
@@ -714,6 +834,11 @@ void Player::update(int deltaTime, ShaderProgram &program)
 		if (jumpAngle == height_air) //FIN DEL SALTO
 		{
 			bJumping = false;
+			glm::ivec2 posTile;
+			if (map->collisionWithUp(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 10, posTile)) {
+				map->changeTile(glm::ivec2(posTile.x, posTile.y), 9, program);
+			}
+
 		}
 		else //SIGUE SALTANDO
 		{
@@ -809,7 +934,7 @@ void Player::update(int deltaTime, ShaderProgram &program)
 				else if (map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 10, posTile) || map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 21, posTile)) {
 					map->changeTile(glm::ivec2(posTile.x, posTile.y), 9, program);
 				}
-				else if (!sword && map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 23, posTile)){
+				else if (!sword && map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 23, posTile) && level == 1){
 					sword = true;
 					map->changeTile(glm::ivec2(posTile.x,posTile.y), 5, program);
 					map->changeTile(glm::ivec2(posTile.x+1, posTile.y), 5, program);
@@ -820,64 +945,79 @@ void Player::update(int deltaTime, ShaderProgram &program)
 				else{
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP) && !Scene::instance().game_over)
 					{
-						if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LONG_JUMP_RIGHT){
-							sprite->changeAnimation(LONG_JUMP_RIGHT);
-							if (music_step)	{
-								Scene::instance().stop_music();
-								music_step = false;
-								music_collision = false;
-							}
-						}
-						else if (sprite->animation() == MOVE_LEFT || sprite->animation() == LONG_JUMP_LEFT) {
-							sprite->changeAnimation(LONG_JUMP_LEFT);
-							if (music_step)	{
-								Scene::instance().stop_music();
-								music_step = false;
-								music_collision = false;
-							}
-						}
+						if (fighting) sprite->changeAnimation(BLOCK_RIGHT);
 						else {
-							bJumping = true;
-							distancia = 0;
-							jumpAngle = 0;
-							startY = posPlayer.y;
-							if (!map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y, face_direction)) {
-								height_air = 180;
+							if (sprite->animation() == MOVE_RIGHT || sprite->animation() == LONG_JUMP_RIGHT){
+								sprite->changeAnimation(LONG_JUMP_RIGHT);
+								if (music_step)	{
+									Scene::instance().stop_music();
+									music_step = false;
+									music_collision = false;
+								}
+							}
+							else if (sprite->animation() == MOVE_LEFT || sprite->animation() == LONG_JUMP_LEFT) {
+								sprite->changeAnimation(LONG_JUMP_LEFT);
+								if (music_step)	{
+									Scene::instance().stop_music();
+									music_step = false;
+									music_collision = false;
+								}
 							}
 							else {
-								if (posPlayer.y >= -8){
-									height_air = 48;
-									distancia -= 10;
-									if (face_direction){
-										if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, true)) {
-											glm::ivec2 posAux = glm::ivec2(posPlayer.x, posPlayer.y - 64);
-											if (map->collisionDoor(posAux, glm::ivec2(24, 64), true)){
-												if (!Scene::instance().isDoorOpened()){
-													sprite->changeAnimation(STAND_RIGHT);
+								bJumping = true;
+								distancia = 0;
+								jumpAngle = 0;
+								startY = posPlayer.y;
+								if (!map->collisionMoveUp(posPlayer, glm::ivec2(32, 64), &posPlayer.y, face_direction)) {
+									height_air = 180;
+								}
+								else {
+									if (posPlayer.y >= -8){
+										height_air = 48;
+										distancia -= 10;
+										if (face_direction){
+											if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, true)) {
+												glm::ivec2 posAux = glm::ivec2(posPlayer.x, posPlayer.y - 64);
+												if (map->collisionDoor(posAux, glm::ivec2(24, 64), true)){
+													if (!Scene::instance().isDoorOpened()){
+														sprite->changeAnimation(STAND_RIGHT);
+													}
+													else {
+														climbing = true;
+														bJumping = false;
+														int posX = posPlayer.x % 32;
+														if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+														else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);
+													}
 												}
 												else {
 													climbing = true;
 													bJumping = false;
-													int posX = posPlayer.x % 32;
-													if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
-													else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+													if (!map->collisionWithUp(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 23, posTile) && !map->collisionWithUp(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 9, posTile)){
+														int posX = posPlayer.x % 32;
+														if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+														else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);
+													}
+													else{
+														posPlayer.x += 17;
+													}
 												}
 											}
-											else {
-												climbing = true;
-												bJumping = false;
-												int posX = posPlayer.x % 32;
-												if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
-												else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
-											}
 										}
-									}
-									else{
-										if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, false)) {
-											glm::ivec2 posAux = glm::ivec2(posPlayer.x, posPlayer.y - 64);
-											if (map->collisionDoor(posAux, glm::ivec2(24, 64), false)){
-												if (!Scene::instance().isDoorOpened()){
-													sprite->changeAnimation(STAND_LEFT);
+										else{
+											if (map->collisionClimb(posPlayer, glm::ivec2(32, 64), &posPlayer.y, false)) {
+												glm::ivec2 posAux = glm::ivec2(posPlayer.x, posPlayer.y - 64);
+												if (map->collisionDoor(posAux, glm::ivec2(24, 64), false)){
+													if (!Scene::instance().isDoorOpened()){
+														sprite->changeAnimation(STAND_LEFT);
+													}
+													else {
+														climbing = true;
+														bJumping = false;
+														int posX = (posPlayer.x % 32);
+														if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
+														else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
+													}
 												}
 												else {
 													climbing = true;
@@ -887,19 +1027,12 @@ void Player::update(int deltaTime, ShaderProgram &program)
 													else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
 												}
 											}
-											else {
-												climbing = true;
-												bJumping = false;
-												int posX = (posPlayer.x % 32);
-												if (posX > 17) posPlayer.x = posPlayer.x - (posX - 17);
-												else if (posX < 17) posPlayer.x = posPlayer.x + (17 - posX);//else 
-											}
 										}
 									}
 								}
+								if (face_direction) sprite->changeAnimation(START_JUMP_RIGHT);
+								else sprite->changeAnimation(START_JUMP_LEFT);
 							}
-							if (face_direction) sprite->changeAnimation(START_JUMP_RIGHT);
-							else sprite->changeAnimation(START_JUMP_LEFT);
 						}
 					}
 					else if (distancia >= 56) {
@@ -943,19 +1076,35 @@ void Player::setPosition(const glm::vec2 &pos)
 
 void Player::change_level(){
 	if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map1.txt") == 0) {
-		if (posPlayer.x >= 208 && posPlayer.y >= 120)
+		if (posPlayer.x >= 208 && posPlayer.y >= 120){
 			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(208, -72), "levels/col3.txt", false, glm::ivec2(0, 120));
+			Scene::instance().isEnemyVisible(false);
+		}
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map3.txt") == 0) {
 		if (posPlayer.x >= 314 && posPlayer.y >= 56) {
-			Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(6, 56), "levels/col4.txt", true, glm::ivec2(310, 56));
+			Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(9, 56), "levels/col4.txt", true, glm::ivec2(Scene::instance().getEnemyPosition().x, Scene::instance().getEnemyPosition().y));
+			if(sword && !Scene::instance().EnemyDied()) fighting = true;
+			if (!Scene::instance().isEnemyCreated() && sword){
+				if (face_direction) sprite->changeAnimation(SHOW_SWORD_RIGHT);
+				else sprite->changeAnimation(SHOW_SWORD_LEFT);
+			}
+			Scene::instance().setEnemyCreated(true);
 		}
-		else if (posPlayer.x == 0 && posPlayer.y == -8)
+		else if (posPlayer.x == 0 && posPlayer.y == -8){
 			Scene::instance().setLevel("levels/prince-map5.txt", glm::vec2(313, -8), "levels/col5.txt", false, glm::ivec2(0, 120));
+			Scene::instance().isEnemyVisible(false);
+		}
+		if (Scene::instance().isEnemyCreated()){
+			if (Scene::instance().getEnemyPosition().x <= 60 && !Scene::instance().EnemyDied()){
+				Scene::instance().isEnemyVisible(true);
+				Scene::instance().setEnemyPosition(glm::ivec2(313, 56));
+			}
+		}
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map4.txt") == 0) {
 		if (posPlayer.x <= 5 && posPlayer.y >= 56) {
-			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(313, 56), "levels/col3.txt", false, glm::ivec2(0, 120));
+			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(312, 56), "levels/col3.txt", false, glm::ivec2(0, 120));
 			Scene::instance().isEnemyVisible(false);
 		}
 		else if (posPlayer.x >= 314 && posPlayer.y >= 56) {
@@ -964,21 +1113,23 @@ void Player::change_level(){
 		}
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map5.txt") == 0){
+		Scene::instance().isEnemyVisible(false);
 		if (posPlayer.x >= 314 && posPlayer.y == -8)
 			Scene::instance().setLevel("levels/prince-map3.txt", glm::vec2(6, -8), "levels/col3.txt", false, glm::ivec2(0, 120));
 		else if (posPlayer.x <=5 && posPlayer.y == -8)
 			Scene::instance().setLevel("levels/prince-map7.txt", glm::vec2(313, -8), "levels/col7.txt", false, glm::ivec2(0, 120));
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map6.txt") == 0){
-		if (posPlayer.x <= 5 && posPlayer.y == 56) {
+		Scene::instance().isEnemyVisible(false);
+		if (posPlayer.x <= 5 && posPlayer.y == 56)
 			Scene::instance().setLevel("levels/prince-map4.txt", glm::vec2(313, 56), "levels/col4.txt", true, glm::ivec2(10, 56));
-		}
 		else if (posPlayer.x >= 313 && posPlayer.y == 56) {
 			level = 2;
 			Scene::instance().setLevel("levels/palace-map1.txt", glm::vec2(6, 56), "levels/map2-col1.txt", false, glm::ivec2(10, 56));
 		}
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map7.txt") == 0){
+		Scene::instance().isEnemyVisible(false);
 		if (posPlayer.x <= 158 && posPlayer.y >= 120)
 			Scene::instance().setLevel("levels/prince-map9.txt", glm::vec2(158, -8), "levels/col9.txt", false, glm::ivec2(0, 120));
 		else if (posPlayer.x <= 5 && posPlayer.y == -8)
@@ -987,6 +1138,7 @@ void Player::change_level(){
 			Scene::instance().setLevel("levels/prince-map5.txt", glm::vec2(6,-8), "levels/col5.txt", false, glm::ivec2(0, 120));
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map8.txt") == 0){
+		Scene::instance().isEnemyVisible(false);
 		if (posPlayer.x <= 130 && posPlayer.y >= 120){
 			distancia = 64;
 			Scene::instance().setLevel("levels/prince-map10.txt", glm::vec2(126, -8), "levels/col10.txt", false, glm::ivec2(0, 120));
@@ -997,6 +1149,7 @@ void Player::change_level(){
 			Scene::instance().setLevel("levels/prince-map7.txt", glm::vec2(6, -8), "levels/col7.txt", false, glm::ivec2(0, 120));
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map11.txt") == 0){
+		Scene::instance().isEnemyVisible(false);
 		if (posPlayer.x <= 5 && posPlayer.y == -8) {
 			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(313, -8), "levels/col12.txt", false, glm::ivec2(10, 56));
 		}
@@ -1005,6 +1158,7 @@ void Player::change_level(){
 		}
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map12.txt") == 0){
+		Scene::instance().isEnemyVisible(false);
 		if (posPlayer.x <= 5 && posPlayer.y == -8) {
 			Scene::instance().setLevel("levels/prince-map13.txt", glm::vec2(313, -8), "levels/col13.txt", false, glm::ivec2(10, 56));
 		}
@@ -1016,6 +1170,7 @@ void Player::change_level(){
 			Scene::instance().setLevel("levels/prince-map11.txt", glm::vec2(6, -8), "levels/col11.txt", false, glm::ivec2(0, 120));
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map13.txt") == 0){
+		Scene::instance().isEnemyVisible(false);
 		if (posPlayer.x >= 314 && posPlayer.y == -8) {
 			Scene::instance().setLevel("levels/prince-map12.txt", glm::vec2(6, -8), "levels/col12.txt", false, glm::ivec2(10, 56));
 		}
@@ -1253,10 +1408,32 @@ void Player::die(){
 	else sprite->changeAnimation(START_FALL_LEFT);
 }
 
+bool Player::hasSword(){
+	return sword;
+}
+
 glm::ivec2 Player::getPosition() {
 	return posPlayer;
 }
 
+int Player::getPlayerAnimation(){
+	return sprite->getCurrentAnimation();
+}
+void Player::PlayerDamaged(){
+	--hp;
+	if (hp == 0){
+		Scene::instance().changeHealthAnimation(hp);
+		if (face_direction) sprite->changeAnimation(DIED_FALL_RIGHT);
+		else sprite->changeAnimation(DIED_FALL_LEFT);
+	}
+	else{
+		if (hp > 0)Scene::instance().changeHealthAnimation(hp);
+	}
+}
+
+int Player::getPlayerHp(){
+	return hp;
+}
 void Player::trapsManagement(ShaderProgram program) {
 	vector<TileChange> traps = map->getTraps();
 	for (int i = 0; i < traps.size(); ++i) {

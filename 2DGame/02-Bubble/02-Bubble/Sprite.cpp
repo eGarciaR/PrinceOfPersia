@@ -133,5 +133,7 @@ void Sprite::falling(bool fall) {
 	isSpriteFalling = fall;
 }
 
-
+int Sprite::getCurrentAnimation(){
+	return currentAnimation;
+}
 

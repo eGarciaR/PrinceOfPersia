@@ -1,20 +1,22 @@
-﻿Compilación iniciada a las 11/04/2017 1:04:11.
+﻿Compilación iniciada a las 11/04/2017 19:58:54.
      1>Proyecto "C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" en el nodo 2 (Build destinos).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
          Player.cpp
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(804): warning C4018: '<' : no coinciden signed/unsigned
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(923): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(924): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1035): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1068): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1262): warning C4018: '<' : no coinciden signed/unsigned
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(524): warning C4806: '!=' : operación no segura : ningún valor del tipo 'bool' promovido al tipo 'PlayerAnims' puede igualar la constante proporcionada
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(929): warning C4018: '<' : no coinciden signed/unsigned
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1056): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1057): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1190): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1223): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1439): warning C4018: '<' : no coinciden signed/unsigned
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.exe" /INCREMENTAL /NOLOGO /LIBPATH:"..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug" /LIBPATH:..\..\..\libs\freeglut\lib /LIBPATH:"..\..\..\libs\glew-1.13.0\lib\Release\Win32" SOIL.lib glew32.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.lib" /MACHINE:X86 Debug\Door.obj
          Debug\Enemy.obj
          Debug\Game.obj
          Debug\Intro.obj
          Debug\Life.obj
+         Debug\LifeEnemy.obj
          Debug\main.obj
          Debug\Player.obj
          Debug\Scene.obj

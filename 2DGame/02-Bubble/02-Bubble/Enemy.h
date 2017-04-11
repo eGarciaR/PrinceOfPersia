@@ -26,14 +26,19 @@ public:
 	void die();
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
-
+	glm::ivec2 getEnemyPosition();
+	void setEnemyCreated(bool created);
+	bool isEnemyCreated();
+	void setEnemyPositon(glm::ivec2 pos);
+	int getEnemyHp();
 private:
-	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over;
+	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over, created, atacking, playerAttacking, blocked;
 	glm::ivec2 tileMapDispl, posEnemy;
 	int jumpAngle, startY, height_air, distancia;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
+	int hp;
 	void change_level_fast();
 	void change_level();
 };

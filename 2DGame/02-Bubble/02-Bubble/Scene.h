@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Torch.h"
 #include "Life.h"
+#include "LifeEnemy.h"
 #include "Door.h"
 #include "Enemy.h"
 #include "Intro.h"
@@ -49,11 +50,22 @@ public:
 	void restart_game();
 	bool game_over;
 	void isEnemyVisible(bool visible);
+	bool getEnemyVisible();
 	void openDoor();
 	bool isDoorOpened();
 	void changeHealthAnimation(int hp);
+	void changeHealthEnemyAnimation(int hp);
 	float getCurrentTime();
 	bool fin_intro;
+	glm::ivec2 getEnemyPosition();
+	glm::ivec2 getPlayerPosition();
+	void setEnemyCreated(bool created);
+	bool isEnemyCreated();
+	void setEnemyPosition(glm::ivec2 pos);
+	int getPlayerAnimation();
+	void PlayerDamaged();
+	bool PlayerDied();
+	bool EnemyDied();
 private:
 	void initShaders();
 
@@ -62,6 +74,7 @@ private:
 	Player *player;
 	Enemy *enemy;
 	Life *life;
+	LifeEnemy *lifeEnemy;
 	Intro *intro;
 	ShaderProgram texProgram;
 	float currentTime;
