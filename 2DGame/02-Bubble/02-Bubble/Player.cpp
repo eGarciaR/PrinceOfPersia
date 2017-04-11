@@ -19,7 +19,7 @@ enum PlayerAnims
 	JUMP_LEFT, START_JUMP_LEFT, JUMP_FALL_LEFT, MOVE_STEP_LEFT, MOVE_STEP_RIGHT, CLIMB_RIGHT, CLIMB_LEFT, LONG_JUMP_RIGHT, LONG_JUMP_LEFT,
 	FALL_DOWN_RIGHT, FALL_DOWN_LEFT, STAND_UP_RIGHT, STAND_UP_LEFT, AGACHADO_RIGHT, AGACHADO_LEFT, DIED_RIGHT, DIED_LEFT, DIED_FALL_RIGHT, DIED_FALL_LEFT,
 	FALLING_LEFT, FALLING_RIGHT, DIED_FINISH_RIGHT, DIED_FINISH_LEFT, GET_SWORD_RIGHT, GET_SWORD_LEFT, SHOW_SWORD_RIGHT, SHOW_SWORD_LEFT, ATACK_RIGHT,
-	ATACK_LEFT, STAND_FIGHT_RIGHT, STAND_FIGHT_LEFT, MOVE_FIGHT_RIGHT, MOVE_FIGHT_LEFT, BLOCK_RIGHT, BLOCK_LEFT, HIDE_SWORD
+	ATACK_LEFT, STAND_FIGHT_RIGHT, STAND_FIGHT_LEFT, MOVE_FIGHT_RIGHT, MOVE_FIGHT_LEFT, BLOCK_RIGHT, BLOCK_LEFT, HIDE_SWORD, LONG_JUMP_QUIET_RIGHT, LONG_JUMP_QUIET_LEFT
 };
 
 
@@ -38,7 +38,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	hp = 3;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.05, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(55);
+	sprite->setNumberAnimations(57);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -402,6 +402,22 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	}
 	sprite->addKeyframe(BLOCK_LEFT, glm::vec2((13 / 20.0f), 0.3f));
 	sprite->setSpeed(BLOCK_LEFT, glm::vec2(0, 0));
+
+	sprite->setAnimationSpeed(LONG_JUMP_QUIET_RIGHT, 8);
+	for (int i = 1; i <= 6; ++i){
+		sprite->addKeyframe(LONG_JUMP_QUIET_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.9f));
+		sprite->setSpeed(LONG_JUMP_QUIET_RIGHT, glm::vec2(0, 0));
+	}
+	sprite->addKeyframe(LONG_JUMP_QUIET_RIGHT, glm::vec2((7 / 20.0f), 0.85f));
+	sprite->addKeyframe(LONG_JUMP_QUIET_RIGHT, glm::vec2((8 / 20.0f), 0.85f));
+	sprite->addKeyframe(LONG_JUMP_QUIET_RIGHT, glm::vec2((9 / 20.0f), 0.85f));
+	sprite->setSpeed(LONG_JUMP_QUIET_RIGHT, glm::vec2(2, 1));
+	sprite->setSpeed(LONG_JUMP_QUIET_RIGHT, glm::vec2(2, 0));
+	sprite->setSpeed(LONG_JUMP_QUIET_RIGHT, glm::vec2(0, -1));
+	for (int i = 2; i <= 7; ++i){
+		sprite->addKeyframe(LONG_JUMP_QUIET_RIGHT, glm::vec2(0.0f + (i / 20.0f), 0.9f));
+		sprite->setSpeed(LONG_JUMP_QUIET_RIGHT, glm::vec2(0, 0));
+	}
 
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
@@ -823,6 +839,12 @@ void Player::update(int deltaTime, ShaderProgram &program)
 		else if (sprite->animation() == DIED_RIGHT || sprite->animation() == DIED_LEFT){
 			if(!Scene::instance().game_over) Scene::instance().set_game_over();
 		}
+		else if (sprite->animation() == LONG_JUMP_QUIET_RIGHT) {
+			if (sprite->checkChangeAnimation(LONG_JUMP_QUIET_RIGHT)) {
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+		}
+		
 	}
 	if (bJumping)
 	{
