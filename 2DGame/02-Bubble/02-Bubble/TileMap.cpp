@@ -261,7 +261,6 @@ bool TileMap::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int
 	x1 = (pos.x + size.x - 1) / tileSize;
 	y = pos.y / 64;
 	if (right){
-		printf("%d  %d\n", map[y*mapSize.x + x0], map[y*mapSize.x + x1]);
 		if (map[y*mapSize.x + x0] == 24 && map[y*mapSize.x + x1] == 23) return true;
 		if (map[y*mapSize.x + x1] == 9 && map[y*mapSize.x + x1+1] == 5) return true;
 		if (map[y*mapSize.x + x1] != 4 && map[y*mapSize.x + x1] != 9 && map[y*mapSize.x + x1] != 11 && map[y*mapSize.x + x1] != 12 && map[y*mapSize.x + x1] != 19 && map[y*mapSize.x + x1] != 20 && map[y*mapSize.x + x1] != 24)
@@ -290,7 +289,7 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 	if (right){
 		if (map[y*mapSize.x + x0] == 24 && map[y*mapSize.x + x1] == 23) return true;
 		if (map[y*mapSize.x + x1] == 9 && map[y*mapSize.x + x1 + 1] == 5) return true;
-		if ((map[y*mapSize.x + x0] == 9 || map[y*mapSize.x + x0] == 11 || map[y*mapSize.x + x0] == 12 || map[y*mapSize.x + x0] == 4 || map[y*mapSize.x + x0] == 19 || map[y*mapSize.x + x0] == 20 || map[y*mapSize.x + x0] == 24) && (map[y*mapSize.x + x1] == 5 || map[y*mapSize.x + x1] == 7 || map[y*mapSize.x + x1] == 6 || map[y*mapSize.x + x1] == 1 || map[y*mapSize.x + x1] == 17 || map[y*mapSize.x + x1] == 16 || map[y*mapSize.x + x1] == 14 || map[y*mapSize.x + x1] == 17))
+		if ((map[y*mapSize.x + x0] == 9 || map[y*mapSize.x + x0] == 11 || map[y*mapSize.x + x0] == 12 || map[y*mapSize.x + x0] == 4 || map[y*mapSize.x + x0] == 19 || map[y*mapSize.x + x0] == 20 || map[y*mapSize.x + x0] == 24) && (map[y*mapSize.x + x1] == 5 || map[y*mapSize.x + x1] == 7 || map[y*mapSize.x + x1] == 6 || map[y*mapSize.x + x1] == 1 || map[y*mapSize.x + x1] == 16 || map[y*mapSize.x + x1] == 14 || map[y*mapSize.x + x1] == 17 || map[y*mapSize.x + x1] == 21))
 		{
 			if (*posY - 64 * y >= 56)
 			{
@@ -299,7 +298,7 @@ bool TileMap::collisionClimb(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 		}
 	}
 	else{
-		if ((map[y*mapSize.x + x1] == 9 || map[y*mapSize.x + x1] == 11 || map[y*mapSize.x + x1] == 4 || map[y*mapSize.x + x1] == 12 || map[y*mapSize.x + x1] == 19 || map[y*mapSize.x + x1] == 20) && (map[y*mapSize.x + x0] == 7 || map[y*mapSize.x + x0] == 6 || map[y*mapSize.x + x0] == 1 || map[y*mapSize.x + x0] == 17 || map[y*mapSize.x + x0] == 5 || map[y*mapSize.x + x0] == 16 || map[y*mapSize.x + x0] == 14))
+		if ((map[y*mapSize.x + x1] == 9 || map[y*mapSize.x + x1] == 11 || map[y*mapSize.x + x1] == 4 || map[y*mapSize.x + x1] == 12 || map[y*mapSize.x + x1] == 19 || map[y*mapSize.x + x1] == 20) && (map[y*mapSize.x + x0] == 7 || map[y*mapSize.x + x0] == 6 || map[y*mapSize.x + x0] == 1 || map[y*mapSize.x + x0] == 17 || map[y*mapSize.x + x0] == 5 || map[y*mapSize.x + x0] == 16 || map[y*mapSize.x + x0] == 14 || map[y*mapSize.x + x0] == 21))
 		{
 			if (*posY - 64 * y >= 56)
 			{

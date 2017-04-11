@@ -29,10 +29,10 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	glm::ivec2 getPosition();
-	bool hasSword();
 	int getPlayerAnimation();
-	void PlayerDamaged();
+	void PlayerDamaged(int count);
 	int getPlayerHp();
+	bool hasSword();
 private:
 	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over, sword, fighting;
 	glm::ivec2 tileMapDispl, posPlayer;

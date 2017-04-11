@@ -63,9 +63,11 @@ public:
 	bool isEnemyCreated();
 	void setEnemyPosition(glm::ivec2 pos);
 	int getPlayerAnimation();
-	void PlayerDamaged();
+	void PlayerDamaged(int count);
 	bool PlayerDied();
 	bool EnemyDied();
+	void resetEnemy();
+	bool hasSword();
 private:
 	void initShaders();
 

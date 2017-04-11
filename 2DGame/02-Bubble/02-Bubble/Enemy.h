@@ -20,7 +20,7 @@ public:
 
 		return p;
 	}
-	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
+	void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, string file);
 	void update(int deltaTime, glm::ivec2 posPlayer);
 	void render();
 	void die();

@@ -18,7 +18,7 @@ enum EnemyAnims
 };
 
 
-void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, string file)
 {
 	face_direction = true;
 	created = false;
@@ -28,7 +28,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	hp = 3;
 	posEnemy.x = 310;
 	posEnemy.y = 56;
-	spritesheet.loadFromFile("images/enemy-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	spritesheet.loadFromFile(file, TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.1, 0.2), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(13);
 
@@ -88,7 +88,7 @@ void Enemy::update(int deltaTime, glm::ivec2 posPlayer)
 	sprite->update(deltaTime);
 	posEnemy.x += sprite->getSpeed().x;
 	posEnemy.y += sprite->getSpeed().y;
-	if (hp == 0){
+	if (hp <= 0){
 		Scene::instance().changeHealthEnemyAnimation(hp);
 		if (sprite->animation() != DIED_FALL_LEFT && sprite->animation() != DIED_LEFT) sprite->changeAnimation(DIED_FALL_LEFT);
 		if (sprite->checkChangeAnimation(DIED_FALL_LEFT)) sprite->changeAnimation(DIED_LEFT);
@@ -115,7 +115,7 @@ void Enemy::update(int deltaTime, glm::ivec2 posPlayer)
 						}
 						if (Scene::instance().getPlayerAnimation() == 46 && !playerAttacking){
 							playerAttacking = true;
-							r = rand() % 80;
+							r = rand() % 20;
 							if (r == 1) {
 								sprite->changeAnimation(BLOCK_LEFT);
 								blocked = true;
@@ -142,7 +142,11 @@ void Enemy::update(int deltaTime, glm::ivec2 posPlayer)
 			if (Scene::instance().getPlayerAnimation() == 52) atacking = false;
 			if (atacking && sprite->checkChangeAnimation(ATACK_LEFT)){
 				atacking = false;
-				Scene::instance().PlayerDamaged();
+				if(!Scene::instance().hasSword())Scene::instance().PlayerDamaged(3);
+				else{
+					Scene::instance().PlayerDamaged(1);
+				}
+				
 			}
 		}
 	}

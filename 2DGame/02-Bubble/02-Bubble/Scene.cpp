@@ -38,13 +38,14 @@ void Scene::init()
 	game_over = false;
 	doorOpened = false;
 	fin_intro = false;
+	play_music("intro.wav", true);
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	col = TileMap::createTileMap("levels/col1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	enemy = new Enemy();
 	intro = new Intro();
-	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, "images/enemy-sprite.png");
 	intro->init(glm::ivec2(SCREEN_X-1, SCREEN_Y), texProgram);
 	intro->setPosition(glm::ivec2(1 * map->getTileSize(), 0));
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -287,8 +288,8 @@ int Scene::getPlayerAnimation(){
 	return player->getPlayerAnimation();
 }
 
-void Scene::PlayerDamaged(){
-	player->PlayerDamaged();
+void Scene::PlayerDamaged(int count){
+	player->PlayerDamaged(count);
 }
 
 bool Scene::PlayerDied(){
@@ -299,4 +300,12 @@ bool Scene::PlayerDied(){
 bool Scene::EnemyDied(){
 	if (0 == enemy->getEnemyHp()) return true;
 	return false;
+}
+
+void Scene::resetEnemy(){
+	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, "images/enemy2-sprite.png");
+}
+
+bool Scene::hasSword(){
+	return player->hasSword();
 }

@@ -75,7 +75,10 @@ void Intro::update(int deltaTime, int x, int y)
 	else if (Scene::instance().getCurrentTime() >= 43018.0f && Scene::instance().getCurrentTime() <= 48017.0f){
 		sprite->changeAnimation(INTRO7); // tercer mensaje
 	}
-	else if (Scene::instance().getCurrentTime() >= 48018.0f) Scene::instance().fin_intro = true;
+	else if (Scene::instance().getCurrentTime() >= 48018.0f) {
+		Scene::instance().fin_intro = true;
+		Scene::instance().stop_music();
+	}
 
 	sprite->update(deltaTime);
 	sprite->setPosition(glm::vec2(x, y));
