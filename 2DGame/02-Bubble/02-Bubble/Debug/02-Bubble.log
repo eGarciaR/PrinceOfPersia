@@ -1,16 +1,16 @@
-﻿Compilación iniciada a las 12/04/2017 12:40:17.
+﻿Compilación iniciada a las 12/04/2017 19:03:04.
      1>Proyecto "C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\02-Bubble\02-Bubble.vcxproj" en el nodo 2 (Build destinos).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"..\..\..\libs\Simple OpenGL Image Library\src" /I..\..\..\libs\freeglut\include /I"..\..\..\libs\glew-1.13.0\include" /I..\..\..\libs\glm /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp
          Player.cpp
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(557): warning C4806: '!=' : operación no segura : ningún valor del tipo 'bool' promovido al tipo 'PlayerAnims' puede igualar la constante proporcionada
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(972): warning C4018: '<' : no coinciden signed/unsigned
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(980): warning C4018: '<' : no coinciden signed/unsigned
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1118): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1119): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1255): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1297): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
-     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1541): warning C4018: '<' : no coinciden signed/unsigned
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(575): warning C4806: '!=' : operación no segura : ningún valor del tipo 'bool' promovido al tipo 'PlayerAnims' puede igualar la constante proporcionada
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1019): warning C4018: '<' : no coinciden signed/unsigned
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1027): warning C4018: '<' : no coinciden signed/unsigned
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1211): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1212): warning C4244: '+=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1342): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1385): warning C4553: '==' : el operador no tiene efecto; ¿ha pensado en '='?
+     1>c:\users\brian\documents\fib\vj\princeofpersia\2dgame\02-bubble\02-bubble\player.cpp(1641): warning C4018: '<' : no coinciden signed/unsigned
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.exe" /INCREMENTAL /NOLOGO /LIBPATH:"..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug" /LIBPATH:..\..\..\libs\freeglut\lib /LIBPATH:"..\..\..\libs\glew-1.13.0\lib\Release\Win32" SOIL.lib glew32.lib winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Brian\Documents\FIB\VJ\PrinceOfPersia\2DGame\02-Bubble\Debug\02-Bubble.lib" /MACHINE:X86 Debug\Door.obj
          Debug\Enemy.obj
@@ -33,4 +33,4 @@
 
 Compilación correcta.
 
-Tiempo transcurrido 00:00:01.29
+Tiempo transcurrido 00:00:00.91

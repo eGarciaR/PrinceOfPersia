@@ -71,6 +71,9 @@ public:
 	bool hasSword();
 	bool isMagicDoor();
 	void openMagicDoor();
+	bool magicDoorOpened();
+	void win();
+	bool won();
 private:
 	void initShaders();
 
@@ -93,6 +96,7 @@ private:
 	bool enemyVisible;
 	bool doorOpened;
 	bool magicdoor;
+	bool winner;
 };
 
 

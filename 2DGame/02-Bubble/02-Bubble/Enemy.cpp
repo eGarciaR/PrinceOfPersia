@@ -25,6 +25,7 @@ void Enemy::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram, str
 	atacking = false;
 	playerAttacking = false;
 	blocked = false;
+	music_on = false;
 	hp = 3;
 	posEnemy.x = 310;
 	posEnemy.y = 56;
@@ -92,6 +93,10 @@ void Enemy::update(int deltaTime, glm::ivec2 posPlayer)
 		Scene::instance().changeHealthEnemyAnimation(hp);
 		if (sprite->animation() != DIED_FALL_LEFT && sprite->animation() != DIED_LEFT) sprite->changeAnimation(DIED_FALL_LEFT);
 		if (sprite->checkChangeAnimation(DIED_FALL_LEFT)) sprite->changeAnimation(DIED_LEFT);
+		if (!music_on){
+			music_on = true;
+			Scene::instance().play_music("guard_death_and_obtaining_the_sword.wav", false);
+		}
 	}
 	else{
 		if (!atacking){

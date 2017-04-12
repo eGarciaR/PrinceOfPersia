@@ -32,7 +32,7 @@ public:
 	void setEnemyPositon(glm::ivec2 pos);
 	int getEnemyHp();
 private:
-	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over, created, atacking, playerAttacking, blocked;
+	bool bJumping, climbing, face_direction, jump_long, agachado, music_collision, music_step, music_collision_over, created, atacking, playerAttacking, blocked, music_on;
 	glm::ivec2 tileMapDispl, posEnemy;
 	int jumpAngle, startY, height_air, distancia;
 	Texture spritesheet;

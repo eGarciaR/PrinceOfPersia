@@ -7,7 +7,6 @@
 
 #define SCREEN_X 0
 #define SCREEN_Y 0
-
 #define INIT_PLAYER_X_TILES 2
 #define INIT_PLAYER_Y_TILES 0
 
@@ -39,6 +38,8 @@ void Scene::init()
 	doorOpened = false;
 	fin_intro = false;
 	magicdoor = false;
+	winner = false;
+	stop_music();
 	play_music("intro.wav", true);
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -84,7 +85,7 @@ void Scene::init()
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
-	if (fin_intro){
+	if (fin_intro && !winner){
 		player->update(deltaTime, texProgram);
 		if (enemyVisible) {
 			enemy->update(deltaTime, player->getPosition());
@@ -98,7 +99,7 @@ void Scene::update(int deltaTime)
 		if (door_pos.size() >= 1) (&doors[0])->update(deltaTime);
 		if (magicdoor) Magicdoor->update(deltaTime);
 	}
-	else intro->update(deltaTime, 1*map->getTileSize(), 0);
+	else if(!fin_intro && !winner)intro->update(deltaTime, 1*map->getTileSize(), 0);
 }
 
 void Scene::render()
@@ -110,7 +111,7 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	if (fin_intro){
+	if (fin_intro && !winner){
 		map->render();
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 		if (door_pos.size() >= 1) (&doors[0])->render();
@@ -129,7 +130,8 @@ void Scene::render()
 		life->render();
 		if (enemyVisible) lifeEnemy->render();
 	}
-	else intro->render();
+	else if(!fin_intro)intro->render();
+	else if (winner) map->render();
 }
 
 void Scene::initShaders()
@@ -336,4 +338,23 @@ bool Scene::isMagicDoor(){
 
 void Scene::openMagicDoor(){
 	Magicdoor->changeAnimation();
+}
+
+bool Scene::magicDoorOpened(){
+	return Magicdoor->magicDoorOpened();
+}
+
+void Scene::win(){
+	stop_music();
+	winner = true;
+	play_music("won.wav", false);
+	map = TileMap::createTileMap("levels/win.txt", glm::vec2(SCREEN_X-1, SCREEN_Y), texProgram);
+	projection = glm::ortho(32.f, float(SCREEN_WIDTH-1), float(SCREEN_HEIGHT -15), 0.f);
+	
+
+	
+}
+
+bool Scene::won(){
+	return winner;
 }

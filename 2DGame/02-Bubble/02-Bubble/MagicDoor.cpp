@@ -87,3 +87,8 @@ bool MagicDoor::opened(){
 void MagicDoor::closeMagicDoor(){
 	if (sprite->animation() != CLOSE && sprite->animation() != CLOSED) sprite->changeAnimation(CLOSE);
 }
+
+bool MagicDoor::magicDoorOpened(){
+	if (sprite->animation() == STAY_OPEN) return true;
+	return false;
+}

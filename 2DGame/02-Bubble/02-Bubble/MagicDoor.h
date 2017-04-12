@@ -19,7 +19,7 @@ public:
 	void changeAnimation();
 	bool opened();
 	void closeMagicDoor();
-
+	bool magicDoorOpened();
 private:
 	glm::ivec2 tileMapDispl, posDoor;
 	Texture spritesheet;
