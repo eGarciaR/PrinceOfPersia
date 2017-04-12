@@ -20,7 +20,7 @@ enum PlayerAnims
 	FALL_DOWN_RIGHT, FALL_DOWN_LEFT, STAND_UP_RIGHT, STAND_UP_LEFT, AGACHADO_RIGHT, AGACHADO_LEFT, DIED_RIGHT, DIED_LEFT, DIED_FALL_RIGHT, DIED_FALL_LEFT,
 	FALLING_LEFT, FALLING_RIGHT, DIED_FINISH_RIGHT, DIED_FINISH_LEFT, GET_SWORD_RIGHT, GET_SWORD_LEFT, SHOW_SWORD_RIGHT, SHOW_SWORD_LEFT, ATACK_RIGHT,
 	ATACK_LEFT, STAND_FIGHT_RIGHT, STAND_FIGHT_LEFT, MOVE_FIGHT_RIGHT, MOVE_FIGHT_LEFT, BLOCK_RIGHT, BLOCK_LEFT, HIDE_SWORD, LONG_JUMP_QUIET_RIGHT,
-	LONG_JUMP_QUIET_LEFT
+	LONG_JUMP_QUIET_LEFT, UP_STAIRS_RIGHT
 };
 
 
@@ -39,7 +39,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	hp = 3;
 	spritesheet.loadFromFile("images/prince-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.05, 0.05), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(57);
+	sprite->setNumberAnimations(58);
 	
 	sprite->setAnimationSpeed(STAND_LEFT, 8);
 	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.1f));
@@ -420,6 +420,17 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->setSpeed(LONG_JUMP_QUIET_RIGHT, glm::vec2(0, 0));
 	}
 
+	sprite->setAnimationSpeed(UP_STAIRS_RIGHT, 8);
+	for (int i = 6; i <= 9; ++i){
+		sprite->addKeyframe(UP_STAIRS_RIGHT, glm::vec2((i / 20.0f), 0.1f));
+		sprite->setSpeed(UP_STAIRS_RIGHT, glm::vec2(0, 0));
+	}
+	for (int i = 4; i <= 8; ++i){
+		sprite->addKeyframe(UP_STAIRS_RIGHT, glm::vec2((i / 20.0f), 0.2f));
+		sprite->setSpeed(UP_STAIRS_RIGHT, glm::vec2(0, 0));
+	}
+
+
 	sprite->changeAnimation(0);
 	tileMapDispl = tileMapPos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + 64), float(tileMapDispl.y + 0)));
@@ -474,7 +485,6 @@ void Player::update(int deltaTime, ShaderProgram &program)
 			}
 			if (sprite->animation() == STAND_RIGHT) {
 				sprite->changeAnimation(MOVE_TO_LEFT);
-				//posPlayer.x += 2;
 				face_direction = false;
 			}
 			if (sprite->animation() == MOVE_TO_LEFT) {
@@ -482,7 +492,6 @@ void Player::update(int deltaTime, ShaderProgram &program)
 					sprite->changeAnimation(STAND_LEFT);
 				}
 			}
-			//if ((sprite->animation() != START_LEFT && sprite->animation() != MOVE_LEFT) && sprite->animation() != MOVE_TO_LEFT && sprite->animation() != MOVE_TO_LEFT_RUNNING) {	// Si aún no ha empezado a moverse y no estaba corriendo -> Empezamos a correr
 			if (sprite->animation() == STAND_LEFT){
 				if (Game::instance().getSpecialKey(SHIFT)) {
 					if (Game::instance().getSpecialKey(GLUT_KEY_UP)){
@@ -958,11 +967,26 @@ void Player::update(int deltaTime, ShaderProgram &program)
 				}
 				else if (map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 21, posTile)) {
 					map->changeTile(glm::ivec2(posTile.x, posTile.y), 5, program);
-					vector<TileChange> traps = map->getTraps();
-					for (int i = 0; i < traps.size(); ++i){
-						if (traps[i].x == posTile.x && traps[i].y == posTile.y) map->changeTileTrap(i, 5);
+					if (!Scene::instance().isMagicDoor()){
+						vector<TileChange> traps = map->getTraps();
+						for (int i = 0; i < traps.size(); ++i){
+							if (traps[i].x == posTile.x && traps[i].y == posTile.y) map->changeTileTrap(i, 5);
+						}
+						Scene::instance().openDoor();
 					}
-					Scene::instance().openDoor();
+					else {
+						if (Scene::instance().getLevel() == "levels/palace-map1.txt"){
+							vector<TileChange> traps = map->getTraps();
+							for (int i = 0; i < traps.size(); ++i){
+								if (traps[i].x == posTile.x && traps[i].y == posTile.y) map->changeTileTrap(i, 5);
+							}
+							Scene::instance().openDoor();
+						}
+						else{
+							map->changeTileTrap(0, 5);
+							Scene::instance().openMagicDoor();
+						}
+					}
 				}
 				else if (map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 10, posTile) || map->collisionWith(posPlayer, glm::ivec2(32, 8), &posPlayer.y, 21, posTile)) {
 					map->changeTile(glm::ivec2(posTile.x, posTile.y), 9, program);
@@ -1164,7 +1188,8 @@ void Player::change_level(){
 		else if (posPlayer.x >= 313 && posPlayer.y == 56) {
 			level = 2;
 			Scene::instance().resetEnemy();
-			Scene::instance().setLevel("levels/palace-map1.txt", glm::vec2(6, 56), "levels/map2-col1.txt", false, glm::ivec2(10, 56));
+			Scene::instance().setLevel("levels/palace-map1.txt", glm::vec2(106, 56), "levels/map2-col1.txt", false, glm::ivec2(10, 56));
+			sprite->changeAnimation(MOVE_TO_RIGHT);
 		}
 	}
 	else if (strcmp(Scene::instance().getLevel().c_str(), "levels/prince-map7.txt") == 0){

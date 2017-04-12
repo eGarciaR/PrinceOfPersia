@@ -12,6 +12,7 @@
 #include "Door.h"
 #include "Enemy.h"
 #include "Intro.h"
+#include "MagicDoor.h"
 #include <windows.h> 
 #include <conio.h>
 #include <stdio.h>
@@ -68,6 +69,8 @@ public:
 	bool EnemyDied();
 	void resetEnemy();
 	bool hasSword();
+	bool isMagicDoor();
+	void openMagicDoor();
 private:
 	void initShaders();
 
@@ -77,6 +80,7 @@ private:
 	Enemy *enemy;
 	Life *life;
 	LifeEnemy *lifeEnemy;
+	MagicDoor *Magicdoor;
 	Intro *intro;
 	ShaderProgram texProgram;
 	float currentTime;
@@ -88,6 +92,7 @@ private:
 	vector<Door> doors;
 	bool enemyVisible;
 	bool doorOpened;
+	bool magicdoor;
 };
 
 

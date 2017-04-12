@@ -38,6 +38,7 @@ void Scene::init()
 	game_over = false;
 	doorOpened = false;
 	fin_intro = false;
+	magicdoor = false;
 	play_music("intro.wav", true);
 	level = "levels/prince-map1.txt";
 	map = TileMap::createTileMap("levels/prince-map1.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -45,6 +46,8 @@ void Scene::init()
 	player = new Player();
 	enemy = new Enemy();
 	intro = new Intro();
+	Magicdoor = new MagicDoor();
+	Magicdoor->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	enemy->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram, "images/enemy-sprite.png");
 	intro->init(glm::ivec2(SCREEN_X-1, SCREEN_Y), texProgram);
 	intro->setPosition(glm::ivec2(1 * map->getTileSize(), 0));
@@ -93,6 +96,7 @@ void Scene::update(int deltaTime)
 
 		}
 		if (door_pos.size() >= 1) (&doors[0])->update(deltaTime);
+		if (magicdoor) Magicdoor->update(deltaTime);
 	}
 	else intro->update(deltaTime, 1*map->getTileSize(), 0);
 }
@@ -110,6 +114,7 @@ void Scene::render()
 		map->render();
 		for (int i = 0; i < antorchas_pos.size(); ++i) (&torchs[i])->render();
 		if (door_pos.size() >= 1) (&doors[0])->render();
+		if (magicdoor) Magicdoor->render();
 		player->render();
 		if (enemyVisible) {
 			enemy->render();
@@ -188,10 +193,25 @@ void Scene::setLevel(string s, glm::vec2 &pos, string column, bool showEnemy, gl
 		door->setTileMap(map);
 		doors.push_back(*door);
 	}
+	if (s == "levels/prince-map6.txt") {
+		magicdoor = true;
+		Magicdoor->setPosition(glm::vec2(map->getTileSize()*8 +20, map->getTileSize()*2 -15));
+	}
+	else if (s == "levels/palace-map11.txt") {
+		magicdoor = true;
+		Magicdoor->setPosition(glm::vec2(map->getTileSize() * 2 + 20 , map->getTileSize() * 2 - 15));
+	}
+	else if (s == "levels/palace-map1.txt"){
+		Magicdoor->closeMagicDoor();
+		magicdoor = true;
+		Magicdoor->setPosition(glm::vec2(map->getTileSize() * 3 + 10, map->getTileSize() * 2 - 15));
+	}
+	else magicdoor = false;
 	projection = glm::ortho(32.f, float(SCREEN_WIDTH + 31), float(SCREEN_HEIGHT - 1), 0.f);
 	currentTime = 0.0f;
 	level = s;
 }
+
 
 void Scene::setAntorcha(glm::ivec2 &pos){
 	antorchas_pos.push_back(pos);
@@ -308,4 +328,12 @@ void Scene::resetEnemy(){
 
 bool Scene::hasSword(){
 	return player->hasSword();
+}
+
+bool Scene::isMagicDoor(){
+	return magicdoor;
+}
+
+void Scene::openMagicDoor(){
+	Magicdoor->changeAnimation();
 }

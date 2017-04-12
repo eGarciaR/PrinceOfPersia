@@ -7,31 +7,38 @@
 
 enum DoorAnims
 {
-	CLOSED, OPEN, STAY_OPEN
+	CLOSED, OPEN, STAY_OPEN, CLOSE
 };
 
 
 void MagicDoor::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	spritesheet.loadFromFile("images/magicDoor-sprite.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.25, 1), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(3);
+	sprite = Sprite::createSprite(glm::ivec2(57, 63), glm::vec2(0.50, 0.5), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(4);
 
 	sprite->setAnimationSpeed(CLOSED, 8);
 	sprite->addKeyframe(CLOSED, glm::vec2(0.f, 0.0f));
 	sprite->setSpeed(CLOSED, glm::vec2(0, 0));
 
 	sprite->setAnimationSpeed(OPEN, 1);
-	sprite->addKeyframe(OPEN, glm::vec2(0.25f, 0.0f));
 	sprite->addKeyframe(OPEN, glm::vec2(0.5f, 0.0f));
-	sprite->addKeyframe(OPEN, glm::vec2(0.75f, 0.0f));
-	sprite->setSpeed(OPEN, glm::vec2(0, 0));
+	sprite->addKeyframe(OPEN, glm::vec2(0.0f, 0.5f));
+	sprite->addKeyframe(OPEN, glm::vec2(0.5f, 0.5f));
 	sprite->setSpeed(OPEN, glm::vec2(0, 0));
 	sprite->setSpeed(OPEN, glm::vec2(0, 0));
 	sprite->setSpeed(OPEN, glm::vec2(0, 0));
 
+	sprite->setAnimationSpeed(CLOSE, 8);
+	sprite->addKeyframe(CLOSE, glm::vec2(0.5f, 0.5f));
+	sprite->addKeyframe(CLOSE, glm::vec2(0.0f, 0.5f));
+	sprite->addKeyframe(CLOSE, glm::vec2(0.5f, 0.0f));
+	sprite->setSpeed(CLOSE, glm::vec2(0, 0));
+	sprite->setSpeed(CLOSE, glm::vec2(0, 0));
+	sprite->setSpeed(CLOSE, glm::vec2(0, 0));
+
 	sprite->setAnimationSpeed(STAY_OPEN, 1);
-	sprite->addKeyframe(STAY_OPEN, glm::vec2(0.75f, 0.0f));
+	sprite->addKeyframe(STAY_OPEN, glm::vec2(0.5f, 0.5f));
 	sprite->setSpeed(STAY_OPEN, glm::vec2(0, 0));
 
 	sprite->changeAnimation(0);
@@ -50,6 +57,9 @@ void MagicDoor::update(int deltaTime)
 	//sprite->setPosition(glm::vec2(x, y));
 	if (sprite->animation() == OPEN) {
 		if (sprite->checkChangeAnimation(OPEN)) sprite->changeAnimation(STAY_OPEN);
+	}
+	else if (sprite->animation() == CLOSE) {
+		if (sprite->checkChangeAnimation(CLOSE)) sprite->changeAnimation(CLOSED);
 	}
 }
 
@@ -72,4 +82,8 @@ void MagicDoor::setPosition(const glm::vec2 &pos)
 bool MagicDoor::opened(){
 	if (sprite->animation() == STAY_OPEN) return true;
 	return false;
+}
+
+void MagicDoor::closeMagicDoor(){
+	if (sprite->animation() != CLOSE && sprite->animation() != CLOSED) sprite->changeAnimation(CLOSE);
 }

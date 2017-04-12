@@ -18,6 +18,7 @@ public:
 	void setPosition(const glm::vec2 &pos);
 	void changeAnimation();
 	bool opened();
+	void closeMagicDoor();
 
 private:
 	glm::ivec2 tileMapDispl, posDoor;
